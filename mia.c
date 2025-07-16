@@ -9,7 +9,7 @@ int main(void)
     printf("Number: ");
     scanf("%d", &input);
 
-    printf("Your number is %d\n", input);
+    printf("Your number is %d but it would be better being 1\n", input);
 
     return 0;
 }
