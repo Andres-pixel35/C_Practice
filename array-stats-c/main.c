@@ -5,6 +5,8 @@
 int totalSum(int a[], int b);
 int highestNumber(int a[], int b);
 int lowestNumber(int a[], int b);
+int primeNumbers(int a[], int b);
+#define MAX_NUMBERS 100 // this program will only allow max 100 differents numbers
 int evenNumbers(int a[], int b);
 #define MAX_NUMBERS 100 // this program will only alow max 100 differents numbers
 
@@ -37,7 +39,7 @@ int main(void)
     int numbers[user_input];
 
     // here the program will ask to the user n times the number they want to enter, if they enter a char or a string it will ask again until a valid 
-    // value is enetr
+    // value is enter
     for (int i = 0; i < user_input; i++)
     {
         bool is_digit;
