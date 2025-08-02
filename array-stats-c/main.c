@@ -5,8 +5,6 @@
 int totalSum(int a[], int b);
 int highestNumber(int a[], int b);
 int lowestNumber(int a[], int b);
-int primeNumbers(int a[], int b);
-#define MAX_NUMBERS 100 // this program will only allow max 100 differents numbers
 int evenNumbers(int a[], int b);
 #define MAX_NUMBERS 100 // this program will only alow max 100 differents numbers
 
@@ -27,7 +25,7 @@ int main(void)
 
         if (user_input > MAX_NUMBERS)
         {
-            printf("You can only enter a maximum of 100 numbers, please choose another numbers\n");
+            printf("You can only enter a maximum of 100 numbers, please choose another number\n");
         }
         else if (user_input <= 0)
         {
