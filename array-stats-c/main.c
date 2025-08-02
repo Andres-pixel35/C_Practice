@@ -37,7 +37,7 @@ int main(void)
     int numbers[user_input];
 
     // here the program will ask to the user n times the number they want to enter, if they enter a char or a string it will ask again until a valid 
-    // value is enetr
+    // value is enter
     for (int i = 0; i < user_input; i++)
     {
         bool is_digit;
