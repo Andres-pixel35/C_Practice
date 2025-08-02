@@ -5,7 +5,7 @@
 int totalSum(int a[], int b);
 int highestNumber(int a[], int b);
 int lowestNumber(int a[], int b);
-int primeNumbers(int a[], int b);
+int evenNumbers(int a[], int b);
 #define MAX_NUMBERS 100 // this program will only alow max 100 differents numbers
 
 int main(void)
@@ -61,11 +61,11 @@ int main(void)
     float average = sum / user_input;
     int highest_number = highestNumber(numbers, user_input);
     int lowest_number = lowestNumber(numbers, user_input);
-    int prime_numbers = primeNumbers(numbers, user_input);
-    int odd_numbers = user_input - prime_numbers;
+    int even_numbers = evenNumbers(numbers, user_input);
+    int odd_numbers = user_input - even_numbers;
 
-    printf("=== RESULTS ===\nTotal sum: %.0f\nAverage: %.2f\nHighest number: %d\nLowest number: %d\nPrime numbers: %d\nOdd numbers: %d\n",
-           sum, average, highest_number, lowest_number, prime_numbers, odd_numbers);
+    printf("=== RESULTS ===\nTotal sum: %.0f\nAverage: %.2f\nHighest number: %d\nLowest number: %d\nEven numbers: %d\nOdd numbers: %d\n",
+           sum, average, highest_number, lowest_number, even_numbers, odd_numbers);
 
     return 0;
 }
@@ -113,7 +113,7 @@ int lowestNumber(int a[], int b)
     return lowest_number;
 }
 
-int primeNumbers(int a[], int b)
+int evenNumbers(int a[], int b)
 {
     int track = 0;
 
