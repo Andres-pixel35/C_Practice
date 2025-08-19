@@ -90,9 +90,9 @@ bool only_numbers(int *variable, int size)
         return false;
     }
 
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < len; i++)
     {
-        if (!isdigit(buffer[i]))
+        if (!isdigit((unsigned char)buffer[i]))
         {
             printf("You must write only digits and you write \'%s\', please try again:\n", buffer);
             return false;
@@ -114,7 +114,7 @@ bool check_month(int *variable)
     }
     else if (*variable > 12)
     {
-        printf("You must write the number of a month (1-12) and you wrote '%d, please try again:\n", *variable);
+        printf("You must write the number of a month (1-12) and you wrote %d, please try again:\n", *variable);
         return false;
     }
     
