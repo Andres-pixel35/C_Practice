@@ -3,6 +3,9 @@
 #include <dirent.h>
 #include <stdbool.h> // for bool, true, false
 
+#include "helpers.h"
+
+// checks if in the current directory has files with the extension '.txt'
 bool has_txt_files(const char *pattern) 
 {
     DIR *d;
@@ -34,6 +37,7 @@ bool has_txt_files(const char *pattern)
     return found;
 }
 
+// stores dynamically the input from the user
 char *read_input(void)
 {
     char *buffer = NULL;
