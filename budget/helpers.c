@@ -6,35 +6,78 @@
 #include <stdbool.h> // for bool, true, false
 
 #include "helpers.h"
+#include "errors.h"
 
-// checks if in the current directory has files with the extension pattern
-bool has_files(const char *pattern) 
+/**
+ * Matches a string against a wildcard pattern
+ * '?' (matches any single character)
+ * 
+ * param pattern The wildcard pattern to match against
+ * param str The string to be matched
+ * return true if the string matches the pattern, false otherwise
+ */
+
+bool match_wildcard(const char *pattern, const char *str)
+{
+    // Base case: if pattern is exhausted, string must also be exhausted for a match
+    if (*pattern == '\0')
+        return *str == '\0';
+   
+    // Handle question mark wildcard - matches exactly one character
+    if (*pattern == '?')
+    {
+        // Question mark cannot match end of string
+        if (*str == '\0')
+            return false;
+       
+        // Move both pattern and string forward by one character
+        return match_wildcard(pattern + 1, str + 1);
+    }
+   
+    // Handle literal character matching
+    if (*str != '\0' && *pattern == *str)
+        return match_wildcard(pattern + 1, str + 1);
+   
+    // No match found
+    return false;
+}
+
+/**
+ * Searches for files in the current directory that match a wildcard pattern
+ * Uses the match_wildcard function to compare filenames against the pattern
+ * 
+ * param pattern The wildcard pattern to search for
+ * return 1 if at least one matching file is found, 0 if no match found, -1 on error
+ */
+int has_files_wildcard(const char *pattern)
 {
     DIR *d;
     struct dirent *dir;
-    bool found = false;
-
+    int found = 1;  // int: 1 = not found, 2 = found, ERR_DIC = error
+    
+    // Open the current directory
     d = opendir(".");
-    if (!d) 
+    if (!d)
     {
-        perror("opendir");
-        return false;
+        return ERR_DIC;  
     }
-
-    while ((dir = readdir(d)) != NULL) 
+   
+    // Iterate through all directory entries
+    while ((dir = readdir(d)) != NULL)
     {
-        // Check if filename ends with the pattern
-        size_t len_name = strlen(dir->d_name);
-        size_t len_pat  = strlen(pattern);
-
-        if (len_name >= len_pat &&
-            strcmp(dir->d_name + len_name - len_pat, pattern) == 0) 
+        // Skip current directory ('.') and parent directory ('..') entries
+        if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0)
+            continue;
+           
+        // Check if current filename matches the wildcard pattern
+        if (match_wildcard(pattern, dir->d_name))
         {
-            found = true;
-            break; // stop after finding first match
+            found = 2;  // Set to 2 when match is found
+            break; // Exit early once we find a match
         }
     }
-
+    
+    // Clean up: close the directory handle
     closedir(d);
     return found;
 }
@@ -78,45 +121,63 @@ char *read_input(void)
 bool only_numbers(int *variable, int size)
 {
     char *buffer = read_input();
+    if (buffer == NULL)
+    {
+        printf("A memory issue has been detected, we suggest you to stop the program and try again.\n(\"ctrl c\" to stop the program.)\n");
+        return false;
+    }
     size_t len = strlen(buffer);
-    if (len > size) // I decided to check the size to ensure that it never overflow the atoi
+    bool result = true;
+
+    if (len > size) // I decided to check the size to ensure that it never overflows the atoi
     {
         printf("For this variable you must write only %d characters and you wrote %zu. Please try again:\n", size, len);
-        return false;
+        result = false;
     }
-    else if (len < 1) // handles when the user press enter and they wrote nothing
+    else if (len < size) // handles when the user press enter and they wrote nothing
     {
-        printf("You must write at least 1 character and you wrote %zu. Please try again:\n", len);
-        return false;
+        printf("You must write at least %d character and you wrote %zu. Please try again:\n", size, len);
+        result = false;
     }
-
-    for (int i = 0; i < len; i++)
+    else
     {
-        if (!isdigit((unsigned char)buffer[i]))
+        for (int i = 0; i < len; i++)
         {
-            printf("You must write only digits and you write \'%s\', please try again:\n", buffer);
-            return false;
-        } 
+
+            if (!isdigit(buffer[i]))
+            {
+                printf("You must write only digits and you write \'%s\', please try again:\n", buffer);
+                result = false;
+                break;
+            } 
+        }
     }
 
-    *variable = atoi(buffer);
-    return true;
+    if (result)
+    {
+        *variable = atoi(buffer);
+    }
+
+    free(buffer);
+    return result;
 }
 
 // since I don´t really need to check the year, I decided to just check the month. Due to the year could be handle only
 // with the previous function
 bool check_month(int *variable)
 {
+    bool result = true;
+
     if (*variable <= 0)
     {
         printf("You must write a positive integer greater than 0 and you wrote %d, please try again:\n", *variable);
-        return false;
+        result = false;
     }
     else if (*variable > 12)
     {
         printf("You must write the number of a month (1-12) and you wrote %d, please try again:\n", *variable);
-        return false;
+        result = false;
     }
     
-    return true;
+    return result;
 }
