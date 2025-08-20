@@ -3,7 +3,8 @@
 
 #include <stdbool.h> // para bool, true, false
 
-bool has_files(const char *pattern);
+bool match_wildcard(const char *pattern, const char *str);
+int has_files_wildcard(const char *pattern);
 char *read_input(void);
 bool only_numbers(int *variable, int size);
 bool check_month(int *variable);
