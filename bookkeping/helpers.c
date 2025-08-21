@@ -181,3 +181,35 @@ bool check_month(int *variable)
     
     return result;
 }
+
+int get_previous_month(int month)
+{
+    int previous_month = 0;
+    
+    if (month == 1)
+    {
+        previous_month = 12; // if the current month is 1 (january) then I set the previous month to 12 (december)
+    }
+    else
+    {
+        previous_month = month - 1;
+    }
+
+    return previous_month;
+}
+
+int get_previous_year(int year)
+{
+    int previous_year = 0;
+
+    if (year == 0)
+    {
+        previous_year = ERR_YEAR;
+    }
+    else
+    {
+        previous_year = year - 1;
+    }
+
+    return previous_year;
+}
