@@ -29,7 +29,7 @@ int main(void)
     else if (result == FILE_FOUND)
     {
         first_time = false;
-        printf("A file has been found, therefore the program will use the month before the one you add afterwards to make your budget.\n");
+        printf("A file has been found, therefore the program will use the month before the one you add afterwards to make your bookkeping.\n");
     }
     else if (result == FILE_NOT_FOUND)
     {
