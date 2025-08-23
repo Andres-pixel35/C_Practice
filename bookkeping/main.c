@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "helpers.h"
+#include "struct.h"
 #include "errors.h"
 
 #define FILE_FOUND 2
@@ -19,6 +20,13 @@ int main(void)
     bool first_time = true;
     int month = 0;
     int year= 0;
+    float previous_balance = 0;
+    float new_balance = 0;
+    float income = 0; 
+    PreviousInvestment previou_investment;
+    PreviousSavings previous_savings;
+    Investment new_investment;
+    Savings new_savings;
 
     int result = has_files_wildcard("??_????.txt");
     if (result == ERR_DIC)
