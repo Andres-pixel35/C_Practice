@@ -1,3 +1,5 @@
+(Tryout file)
+
 Financial Overview & Key Drivers for 12/2023
 
 - Total income: $1000.00
@@ -13,13 +15,13 @@ Snacks: $50.00 (6.66%)
 Credit card: $100.00 (100%)
 
 This month you saved $50 (5% out of your income this month) and the total of your savings is the following:
-- Savings: $50 
+- Savings: $50.00
 Travels: $0.00 (0%)
 Planned purchases: $25.00 (50%)
 Emergencies: $25 (50%)
 
 This month you inverted $50 (5% out of your income this month) and the total of your investment is the following:
-- Investment: $50 
+- Investment: $50.00
 Real estate: $0.00 (0%)
 Currencies (forex): $0.00 (0%)
 Commodities: $0.00 (0%)

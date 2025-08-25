@@ -5,6 +5,7 @@
 #include "helpers.h"
 #include "struct.h"
 #include "errors.h"
+#include "finance.h"
 
 #define FILE_FOUND 2
 #define FILE_NOT_FOUND 1
@@ -23,15 +24,15 @@ int main(void)
     float previous_balance = 0;
     float new_balance = 0;
     float income = 0; 
-    PreviousInvestment previou_investment;
-    PreviousSavings previous_savings;
-    Investment new_investment;
-    Savings new_savings;
-
+    PreviousInvestment previous_investment = {0};
+    PreviousSavings previous_savings = {0};
+    Investment new_investment = {0};
+    Savings new_savings = {0};
+    
     int result = has_files_wildcard("??_????.txt");
     if (result == ERR_DIC)
     {
-        fprintf(stderr, "ERROR: Cannot open current directory\n");
+        dic_not_open();
         return ERR_DIC;
     } 
     else if (result == FILE_FOUND)
@@ -75,8 +76,7 @@ int main(void)
             if (previous_year == ERR_YEAR)
             {
                 // except if the current year is 0000, the program won't work with years Before the Common Era
-                fprintf(stderr, "ERROR: There is no year before the year 0000\n"
-                                "And not, we won't work with years Before the Common Era.\n");
+                err_year();
                 return ERR_YEAR;
             }
         }
@@ -87,16 +87,27 @@ int main(void)
         FILE *previous_bookkeping = fopen(previous_file_name, "r");
         if (!previous_bookkeping)
         {
-            fprintf(stderr, "ERROR: Could not open the file \"%s\", it either does not exists or you don't have the permissions to access.\n"
-                            "Remeber that the program found a file with the structure \"MM_YYYY.txt\" in your current directory.\n"
-                            "Therefore, the program tried to access to the month before the one you enter (\"%02d_%04d\")"
-                            " in order to take some data and use it for this month.\n"
-                            "It failed, so please make sure to always enter consecutive months.\n", previous_file_name, month, year);
-
+            previous_file_not_open(previous_file_name, month, year);
             return ERR_FILE;
         }
 
-        printf("%s\n", previous_file_name);
+        bool is_empty = (fgetc(previous_bookkeping) == EOF); // checks whether the file is empty
+
+        if (is_empty)
+        {
+            file_empty(previous_file_name, month, year);
+            return ERR_FILE;
+        }
+
+        int is_modified = get_previous_savings(previous_bookkeping, &previous_savings);
+
+        if (is_modified == ERR_FILE) // if get previous savings does not find one value, it returns ERR_FILE and stops the program since it can't continue
+        {                            // if those values are missing
+            missing_values(previous_file_name);
+            return ERR_FILE;
+        }
+        printf("Savings: $%.2f, travels: $%.2f, purchase: $%.2f, emergencies: $%.2f.\n", 
+            previous_savings.previous_total_saving, previous_savings.previous_travels, previous_savings.previous_purchase, previous_savings.previous_emergencies);
         fclose(previous_bookkeping);
     }
 

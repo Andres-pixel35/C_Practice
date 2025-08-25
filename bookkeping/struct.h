@@ -3,9 +3,9 @@
 
 typedef struct PreviousSavings
 {
-    float previou_total_saving;
+    float previous_total_saving;
     float previous_travels;
-    float precious_purchase;
+    float previous_purchase;
     float previous_emergencies;
 }
 PreviousSavings;
