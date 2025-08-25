@@ -1,7 +1,7 @@
 #ifndef HELPERS_H
 #define HELPERS_H
 
-#include <stdbool.h> // para bool, true, false
+#include <stdbool.h>
 
 bool match_wildcard(const char *pattern, const char *str);
 int has_files_wildcard(const char *pattern);

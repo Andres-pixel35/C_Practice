@@ -6,4 +6,10 @@
 #define ERR_DIC 53
 #define ERR_YEAR 54
 
+void dic_not_open(void);
+void err_year(void);
+void previous_file_not_open(char *previous_file_name, int month, int year);
+void file_empty(char *previous_file_name, int month, int year);
+void missing_values(char *previous_file_name);
+
 #endif
