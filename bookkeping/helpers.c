@@ -134,9 +134,9 @@ bool only_numbers(int *variable, int size)
         printf("For this variable you must write only %d characters and you wrote %zu. Please try again:\n", size, len);
         result = false;
     }
-    else if (len < size) // handles when the user press enter and they wrote nothing
+    else if (len < 1) // handles when the user press enter and they wrote nothing
     {
-        printf("You must write at least %d character and you wrote %zu. Please try again:\n", size, len);
+        printf("You must write at least 1 character and you wrote 0. Please try again:\n");
         result = false;
     }
     else
