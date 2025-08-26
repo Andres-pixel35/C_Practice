@@ -99,15 +99,23 @@ int main(void)
             return ERR_FILE;
         }
 
-        int is_modified = get_previous_savings(previous_bookkeping, &previous_savings);
+        int is_modified = get_previous_savings(previous_bookkeping, &previous_savings, &previous_balance);
 
         if (is_modified == ERR_FILE) // if get previous savings does not find one value, it returns ERR_FILE and stops the program since it can't continue
         {                            // if those values are missing
             missing_values(previous_file_name);
             return ERR_FILE;
         }
-        printf("Savings: $%.2f, travels: $%.2f, purchase: $%.2f, emergencies: $%.2f.\n", 
-            previous_savings.previous_total_saving, previous_savings.previous_travels, previous_savings.previous_purchase, previous_savings.previous_emergencies);
+
+        is_modified = get_previous_investments(previous_bookkeping, &previous_investment);
+
+        if (is_modified == ERR_FILE)
+        {                            
+            missing_values(previous_file_name);
+            return ERR_FILE;
+        }
+
+        printf("Savings: %.2f, investment: %.2f, final balance: %.2f\n", previous_savings.previous_total_saving, previous_investment.previous_total_investment, previous_balance);
         fclose(previous_bookkeping);
     }
 

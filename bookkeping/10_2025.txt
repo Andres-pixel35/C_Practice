@@ -1,5 +1,14 @@
-(Tryout file)
+(test file)
 
 - Savings: $100.00
 Travels: $0.00 (0%)
-Emergencies: $25 (50%)
+Planned purchases: $50.00 (50%)
+Emergencies: $50.00 (50%)
+
+- Investment: $400.00
+Real estate: $150.00 (0%)
+Currencies (forex): $50.00 (0%)
+Commodities: $150.00 (0%)
+Stocks: $50.00 (100%)
+
+- Final balance: $100.00
