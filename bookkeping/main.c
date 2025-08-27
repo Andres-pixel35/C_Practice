@@ -119,5 +119,7 @@ int main(void)
         fclose(previous_bookkeping);
     }
 
+    
+
     return 0;
 }
