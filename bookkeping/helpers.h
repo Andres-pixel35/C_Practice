@@ -10,5 +10,7 @@ bool only_numbers(int *variable, int size);
 bool check_month(int *variable);
 int get_previous_month(int month);
 int get_previous_year(int year);
+int check_choose(char *choose);
+char *ask_choose(void); 
 
 #endif

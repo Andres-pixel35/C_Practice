@@ -24,7 +24,7 @@ void previous_file_not_open(char *previous_file_name, int month, int year)
 
 void file_empty(char *previous_file_name, int month, int year)
 {
-    fprintf(stderr, "\nThe file \"%s\" is empty, please make sure to have in the current directory only files created for this program.\n"
+    fprintf(stderr, "\nERROR: The file \"%s\" is empty, please make sure to have in the current directory only files created for this program.\n"
                     "Remeber that the program found a file with the structure \"MM_YYYY.txt\" in your current directory.\n"
                     "Therefore, the program tried to access to the month before the one you enter (\"%02d_%04d\")"
                     " in order to take some data and use it for this month.\n"
@@ -34,9 +34,19 @@ void file_empty(char *previous_file_name, int month, int year)
 
 void missing_values(char *previous_file_name)
 {
-    fprintf(stderr, "\nThe file program did not found one of the neccessaries values in the file \"%s\"\n"
+    fprintf(stderr, "\nERROR: The file program did not found one of the neccessaries values in the file \"%s\"\n"
                     "Remeber that those atributes are esential to keep track of some values like savings or investment\n"
                     "and reflect them in the following months. Since the program did not found them\n"
                     "the file was either modified of it was not created by this program.\n"
                     "Either way, please make sure that the month you enter is after the last month you created here.\n", previous_file_name);
+}
+
+void wrong_chose(char *choose)
+{
+    fprintf(stderr, "\nERROR: wrong input. We asked you to either enter \"y\" or \"n\" but you entered \"%s\"\n", choose);
+}
+
+void memory_error(void)
+{
+    fprintf(stderr, "\nCould not allocate memory.\n");
 }

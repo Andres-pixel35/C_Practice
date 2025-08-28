@@ -13,6 +13,7 @@
 #define MAX_LEN_YEAR 4 // here the same, and it also works to avoid and overflow with atoi in helpers.c
 #define SIZE_FILE_NAME 12 // so, 12 characters due to the restrictions for the name 'MM_YYYY.txt' + '\0' = 12
 #define FIRST_MONTH 1 // i need to check if the current month is 12, if so then I have to set it to 12 and reduce the year by 1
+#define MAX_LEN_FLOAT 17 // if you realy have this amount of money, i don't know what are you doing here
 
 int main(void)
 {
@@ -113,12 +114,27 @@ int main(void)
             missing_values(previous_file_name);
             return ERR_FILE;
         }
-
-        printf("Savings: %.2f, investment: %.2f, final balance: %.2f\n", previous_savings.previous_total_saving, previous_investment.previous_total_investment, previous_balance);
+    
         fclose(previous_bookkeping);
     }
+    else
+    {
+        printf("Welcome to the interface for new users, do you have any previous balance that you would like to add?\n"
+                "Remeber that is money besides savings and investments: ");
+        char *choose = ask_choose();
+        if (choose == NULL)
+        {
+            return ERR_MEMORY;
+        }
 
-    
+        switch (choose[0])
+        {
+            case 'y':
+            printf("%s\n", choose);
+            
+        }
 
+        free(choose);
+    }    
     return 0;
 }

@@ -210,3 +210,47 @@ int get_previous_year(int year)
 
     return previous_year;
 }
+
+int check_choose(char *choose)
+{
+    int len = strlen(choose);
+    if (len > 1)
+    {
+        return ERR_CHOOSE;
+    }
+
+    choose[0] = tolower(choose[0]);
+
+    if (choose[0] != 'y' && choose[0] != 'n')
+    {
+        return ERR_CHOOSE;
+    }
+    return 0;
+}
+
+char *ask_choose(void) 
+{
+    char *choose = NULL;
+
+    while (1) 
+    {
+        printf("(y/n): ");
+        choose = read_input();
+        if (choose == NULL) 
+        {
+            memory_error();
+            return NULL; // only memory error breaks
+        }
+
+        if (check_choose(choose) == ERR_CHOOSE) 
+        {
+            wrong_chose(choose);
+            free(choose);
+            continue; // ask again
+        }
+
+        return choose; // valid answer
+    }
+}
+
+
