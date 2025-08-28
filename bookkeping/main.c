@@ -53,9 +53,9 @@ int main(void)
         {
             printf("\nMonth (2 digits, e.g; 01-12): ");
         } 
-        while (!only_numbers(&month, MAX_LEN_MONTH)); // 2 to ensure than the user writes a small number (1-12)
+        while (!only_numbers(&month, MAX_LEN_MONTH));
     }
-    while (!check_month(&month)); // ensures that the numbers is, actually, a month and not a random number
+    while (!check_month(&month));
 
     do
     {
@@ -81,7 +81,6 @@ int main(void)
             }
         }
 
-        //even though the size of year and month are strictly defined, with sprintf I had problems with the output, so I decided to use snprintf
         snprintf(previous_file_name, sizeof(previous_file_name), "%02d_%04d.txt", previous_month, previous_year); 
 
         FILE *previous_bookkeping = fopen(previous_file_name, "r");
@@ -91,7 +90,7 @@ int main(void)
             return ERR_FILE;
         }
 
-        bool is_empty = (fgetc(previous_bookkeping) == EOF); // checks whether the file is empty
+        bool is_empty = (fgetc(previous_bookkeping) == EOF);
 
         if (is_empty)
         {

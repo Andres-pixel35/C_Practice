@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
-#include <stdbool.h> // for bool, true, false
+#include <stdbool.h>
 
 #include "helpers.h"
 #include "errors.h"
@@ -47,7 +47,6 @@ bool match_wildcard(const char *pattern, const char *str)
  * Uses the match_wildcard function to compare filenames against the pattern
  * 
  * param pattern The wildcard pattern to search for
- * return 1 if at least one matching file is found, 0 if no match found, -1 on error
  */
 int has_files_wildcard(const char *pattern)
 {
@@ -117,7 +116,7 @@ char *read_input(void)
     return buffer;
 }
 
-// it checks out the input, return true is the input has at least two characters and they are numbers. false otherwise
+// it checks out the input, return true is the input has at least 1 characters, less than size and they all are numbers. false otherwise
 bool only_numbers(int *variable, int size)
 {
     char *buffer = read_input();
@@ -162,8 +161,6 @@ bool only_numbers(int *variable, int size)
     return result;
 }
 
-// since I don´t really need to check the year, I decided to just check the month. Due to the year could be handle only
-// with the previous function
 bool check_month(int *variable)
 {
     bool result = true;
