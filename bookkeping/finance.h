@@ -3,7 +3,8 @@
 
 #include "struct.h"
 
-int get_previous_savings(FILE *file, PreviousSavings *savings, float *previous_balance);
+int get_previous_savings(FILE *file, PreviousSavings *savings, double *previous_balance);
 int get_previous_investments(FILE *file, PreviousInvestment *investment); 
+double get_values_double(int size);
 
 #endif
