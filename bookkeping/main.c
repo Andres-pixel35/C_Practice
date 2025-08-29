@@ -9,8 +9,8 @@
 
 #define FILE_FOUND 2
 #define FILE_NOT_FOUND 1
-#define MAX_LEN_MONTH 2 // this is the check the length of the input, if it has more than 2 characters it's obviously not a month
-#define MAX_LEN_YEAR 4 // here the same, and it also works to avoid and overflow with atoi in helpers.c
+#define MAX_LEN_MONTH 2 // this is to check the length of the input, if it has more than 2 characters it's obviously not a month
+#define MAX_LEN_YEAR 4 // here it's the same, and it also works to avoid overflow the atoi in helpers.c
 #define SIZE_FILE_NAME 12 // so, 12 characters due to the restrictions for the name 'MM_YYYY.txt' + '\0' = 12
 #define FIRST_MONTH 1 // i need to check if the current month is 12, if so then I have to set it to 12 and reduce the year by 1
 #define MAX_LEN_DOUBLE 15 // if you realy have this amount of money, I don't know what are you doing here
