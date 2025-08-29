@@ -3,39 +3,39 @@
 
 typedef struct PreviousSavings
 {
-    float previous_total_saving;
-    float previous_travels;
-    float previous_purchase;
-    float previous_emergencies;
+    double previous_total_saving;
+    double previous_travels;
+    double previous_purchase;
+    double previous_emergencies;
 }
 PreviousSavings;
 
 typedef struct PreviousInvestment
 {
-    float previous_total_investment;
-    float previous_real_estate;
-    float previous_currencies;
-    float previous_commodities;
-    float previous_stocks;
+    double previous_total_investment;
+    double previous_real_estate;
+    double previous_currencies;
+    double previous_commodities;
+    double previous_stocks;
 }
 PreviousInvestment;
 
 typedef struct Savings
 {
-    float total_saving;
-    float travels;
-    float purchase;
-    float emergencies;
+    double total_saving;
+    double travels;
+    double purchase;
+    double emergencies;
 }
 Savings;
 
 typedef struct Investment
 {
-    float investment;
-    float real_estate;
-    float currencies;
-    float commodities;
-    float stocks;
+    double investment;
+    double real_estate;
+    double currencies;
+    double commodities;
+    double stocks;
 }
 Investment;
 #endif

@@ -13,7 +13,7 @@
 #define MAX_LEN_YEAR 4 // here the same, and it also works to avoid and overflow with atoi in helpers.c
 #define SIZE_FILE_NAME 12 // so, 12 characters due to the restrictions for the name 'MM_YYYY.txt' + '\0' = 12
 #define FIRST_MONTH 1 // i need to check if the current month is 12, if so then I have to set it to 12 and reduce the year by 1
-#define MAX_LEN_FLOAT 17 // if you realy have this amount of money, i don't know what are you doing here
+#define MAX_LEN_DOUBLE 15 // if you realy have this amount of money, I don't know what are you doing here
 
 int main(void)
 {
@@ -22,9 +22,9 @@ int main(void)
     bool first_time = true;
     int month = 0;
     int year= 0;
-    float previous_balance = 0;
-    float new_balance = 0;
-    float income = 0; 
+    double previous_balance = 0;
+    double new_balance = 0;
+    double income = 0; 
     PreviousInvestment previous_investment = {0};
     PreviousSavings previous_savings = {0};
     Investment new_investment = {0};
@@ -119,8 +119,8 @@ int main(void)
     }
     else
     {
-        printf("Welcome to the interface for new users, do you have any previous balance that you would like to add?\n"
-                "Remeber that is money besides savings and investments: ");
+        printf("\n=== Welcome to the interface for new users ===\nDo you have any previous balance that you would like to add?\n"
+                "Remeber that is money besides savings and investments and it's from the previous month ");
         char *choose = ask_choose();
         if (choose == NULL)
         {
@@ -130,11 +130,63 @@ int main(void)
         switch (choose[0])
         {
             case 'y':
-            printf("%s\n", choose);
+                previous_balance = get_values_double(MAX_LEN_DOUBLE);
+                if (previous_balance == ERR_MEMORY)
+                {
+                    free(choose);
+                    memory_error();
+                    return ERR_MEMORY;
+                }
+                break;
             
+            case 'n':
+                break;
+        }
+        free(choose);
+
+        printf("\nNice, now, do you have any previous savings that you would like to add?\n"
+                "Remember, savings not including what you've added this month: ");
+        choose = ask_choose();
+        if (choose == NULL)
+        {
+            return ERR_MEMORY;
         }
 
-        free(choose);
-    }    
+        switch (choose[0])
+        {
+        case 'y':
+            printf("\nIf you have nothing in any of the following items you may enter \"0\" or just press \"enter\".\n");
+            printf("\n=== Savings for future travels ===\n");
+            previous_savings.previous_travels = get_values_double(MAX_LEN_DOUBLE);
+            if (previous_savings.previous_travels == ERR_MEMORY)
+            {
+                free(choose);
+                return ERR_MEMORY;
+            }
+
+            printf("\n=== Savings for future purchases ===\n");
+            previous_savings.previous_purchase = get_values_double(MAX_LEN_DOUBLE);
+            if (previous_savings.previous_purchase == ERR_MEMORY)
+            {
+                free(choose);
+                return ERR_MEMORY;
+            }
+
+            printf("\n=== Savings for emergencies ===\n");
+            previous_savings.previous_emergencies = get_values_double(MAX_LEN_DOUBLE);
+            if (previous_savings.previous_emergencies == ERR_MEMORY)
+            {
+                free(choose);
+                return ERR_MEMORY;
+            }
+
+            previous_savings.previous_total_saving = previous_savings.previous_travels + previous_savings.previous_purchase + previous_savings.previous_emergencies;
+            break;
+        
+        case 'n':
+            break;
+       } 
+       free(choose);
+    }
     return 0;
 }

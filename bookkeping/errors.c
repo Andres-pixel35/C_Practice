@@ -48,5 +48,5 @@ void wrong_chose(char *choose)
 
 void memory_error(void)
 {
-    fprintf(stderr, "\nCould not allocate memory.\n");
+    fprintf(stderr, "\nERROR: Could not allocate memory.\n");
 }
