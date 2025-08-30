@@ -9,33 +9,33 @@
 
 #define FILE_FOUND 2
 #define FILE_NOT_FOUND 1
-#define MAX_LEN_MONTH 2 // this is to check the length of the input, if it has more than 2 characters it's obviously not a month
-#define MAX_LEN_YEAR 4 // here it's the same, and it also works to avoid overflow the atoi in helpers.c
+#define MAX_LEN_MONTH 2   // this is to check the length of the input, if it has more than 2 characters it's obviously not a month
+#define MAX_LEN_YEAR 4    // here it's the same, and it also works to avoid overflow the atoi in helpers.c
 #define SIZE_FILE_NAME 12 // so, 12 characters due to the restrictions for the name 'MM_YYYY.txt' + '\0' = 12
-#define FIRST_MONTH 1 // i need to check if the current month is 12, if so then I have to set it to 12 and reduce the year by 1
+#define FIRST_MONTH 1     // i need to check if the current month is 12, if so then I have to set it to 12 and reduce the year by 1
 #define MAX_LEN_DOUBLE 15 // if you realy have this amount of money, I don't know what are you doing here
 
 int main(void)
 {
     printf("=== BEFORE EXECUTING THIS PROGRAM, MAKE SURE YOU HAVE READ THE README FILE.===\n\n");
-    //here i will define several local functions for main
+    // here i will define several local functions for main
     bool first_time = true;
     int month = 0;
-    int year= 0;
+    int year = 0;
     double previous_balance = 0;
     double new_balance = 0;
-    double income = 0; 
+    double income = 0;
     PreviousInvestment previous_investment = {0};
     PreviousSavings previous_savings = {0};
     Investment new_investment = {0};
     Savings new_savings = {0};
-    
+
     int result = has_files_wildcard("??_????.txt");
     if (result == ERR_DIC)
     {
         dic_not_open();
         return ERR_DIC;
-    } 
+    }
     else if (result == FILE_FOUND)
     {
         first_time = false;
@@ -53,16 +53,13 @@ int main(void)
         do
         {
             printf("\nMonth (2 digits, e.g; 01-12): ");
-        } 
-        while (!only_numbers(&month, MAX_LEN_MONTH));
-    }
-    while (!check_month(&month));
+        } while (!only_numbers(&month, MAX_LEN_MONTH));
+    } while (!check_month(&month));
 
     do
     {
         printf("\nYear (4 digits, e.g; 2023): ");
-    }
-    while(!only_numbers(&year, MAX_LEN_YEAR));
+    } while (!only_numbers(&year, MAX_LEN_YEAR));
 
     // The program will only search for the information in the previous month if it exists, aka it's there at least one file that fulfil the requirements
     if (!first_time)
@@ -82,7 +79,7 @@ int main(void)
             }
         }
 
-        snprintf(previous_file_name, sizeof(previous_file_name), "%02d_%04d.txt", previous_month, previous_year); 
+        snprintf(previous_file_name, sizeof(previous_file_name), "%02d_%04d.txt", previous_month, previous_year);
 
         FILE *previous_bookkeping = fopen(previous_file_name, "r");
         if (!previous_bookkeping)
@@ -110,17 +107,19 @@ int main(void)
         is_modified = get_previous_investments(previous_bookkeping, &previous_investment);
 
         if (is_modified == ERR_FILE)
-        {                            
+        {
             missing_values(previous_file_name);
             return ERR_FILE;
         }
-    
+
         fclose(previous_bookkeping);
     }
     else
     {
+        bool valid = true; // to control memory errors
+
         printf("\n=== Welcome to the interface for new users ===\nDo you have any previous balance that you would like to add?\n"
-                "Remeber that is money besides savings and investments and it's from the previous month ");
+               "Remeber that is money besides savings and investments and it's from the previous month ");
         char *choose = ask_choose();
         if (choose == NULL)
         {
@@ -129,23 +128,22 @@ int main(void)
 
         switch (choose[0])
         {
-            case 'y':
-                previous_balance = get_values_double(MAX_LEN_DOUBLE);
-                if (previous_balance == ERR_MEMORY)
-                {
-                    free(choose);
-                    memory_error();
-                    return ERR_MEMORY;
-                }
-                break;
-            
-            case 'n':
-                break;
+        case 'y':
+            previous_balance = get_values_double(MAX_LEN_DOUBLE);
+            if (previous_balance == ERR_MEMORY)
+            {
+                free(choose);
+                return ERR_MEMORY;
+            }
+            break;
+
+        case 'n':
+            break;
         }
         free(choose);
 
         printf("\nNice, now, do you have any previous savings that you would like to add?\n"
-                "Remember, savings not including what you've added this month: ");
+               "Remember, savings not including what you've added this month ");
         choose = ask_choose();
         if (choose == NULL)
         {
@@ -160,33 +158,100 @@ int main(void)
             previous_savings.previous_travels = get_values_double(MAX_LEN_DOUBLE);
             if (previous_savings.previous_travels == ERR_MEMORY)
             {
-                free(choose);
-                return ERR_MEMORY;
+                valid = false;
+                break;
             }
 
             printf("\n=== Savings for future purchases ===\n");
             previous_savings.previous_purchase = get_values_double(MAX_LEN_DOUBLE);
             if (previous_savings.previous_purchase == ERR_MEMORY)
             {
-                free(choose);
-                return ERR_MEMORY;
+                valid = false;
+                break;
             }
 
             printf("\n=== Savings for emergencies ===\n");
             previous_savings.previous_emergencies = get_values_double(MAX_LEN_DOUBLE);
             if (previous_savings.previous_emergencies == ERR_MEMORY)
             {
-                free(choose);
-                return ERR_MEMORY;
+                valid = false;
+                break;
             }
 
             previous_savings.previous_total_saving = previous_savings.previous_travels + previous_savings.previous_purchase + previous_savings.previous_emergencies;
             break;
-        
+
         case 'n':
             break;
-       } 
-       free(choose);
+        }
+        free(choose);
+
+        if (!valid)
+        {
+            return ERR_MEMORY;
+        }
+
+        printf("\nNice, now, do you have any previous investment that you would like to add?\n"
+                "Remember, investment not including what you've added this month ");
+        
+        choose = ask_choose();
+        if (choose == NULL)
+        {
+            return ERR_MEMORY;
+        }
+
+        switch (choose[0])
+        {
+            case 'y':
+                printf("\nIf you have nothing in any of the following items you may enter \"0\" or just press \"enter\".\n");
+                printf("\n=== Real Estate investment ===");
+                previous_investment.previous_real_estate = get_values_double(MAX_LEN_DOUBLE);
+                if (previous_investment.previous_real_estate == ERR_MEMORY)
+                {
+                    valid = false;
+                    break;
+                }
+
+                printf("\n=== Currencies Investment ===\n");
+                previous_investment.previous_currencies = get_values_double(MAX_LEN_DOUBLE);
+                if (previous_investment.previous_currencies == ERR_MEMORY)
+                {
+                    valid = false;
+                    break;
+                }
+
+                printf("\n=== Commodities Investment ===\n");
+                previous_investment.previous_commodities = get_values_double(MAX_LEN_DOUBLE);
+                if (previous_investment.previous_commodities == ERR_MEMORY)
+                {
+                    valid = false;
+                    break;
+                }
+
+                printf("\n=== Stocks ===\n");
+                previous_investment.previous_stocks = get_values_double(MAX_LEN_DOUBLE);
+                if (previous_investment.previous_stocks == ERR_MEMORY)
+                {
+                    valid = false;
+                    break;
+                }
+
+                previous_investment.previous_total_investment = previous_investment.previous_real_estate +
+                                                                previous_investment.previous_currencies +
+                                                                previous_investment.previous_commodities +
+                                                                previous_investment.previous_stocks;       
+
+                break;
+                
+            case 'n':
+                break;
+        }
+        free(choose);
+
+        if (!valid)
+        {
+            return ERR_MEMORY;
+        }
     }
     return 0;
 }
