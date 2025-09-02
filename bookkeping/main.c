@@ -95,6 +95,7 @@ int main(void)
         if (is_empty)
         {
             file_empty(previous_file_name, month, year);
+            fclose(previous_bookkeping);
             return ERR_FILE;
         }
 
@@ -103,6 +104,7 @@ int main(void)
         if (is_modified == ERR_FILE) // if get previous savings does not find one value, it returns ERR_FILE and stops the program since it can't continue
         {                            // if those values are missing
             missing_values(previous_file_name);
+            fclose(previous_bookkeping);
             return ERR_FILE;
         }
 
@@ -111,6 +113,7 @@ int main(void)
         if (is_modified == ERR_FILE)
         {
             missing_values(previous_file_name);
+            fclose(previous_bookkeping);
             return ERR_FILE;
         }
 
