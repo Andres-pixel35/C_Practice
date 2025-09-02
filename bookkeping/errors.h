@@ -14,5 +14,6 @@ void file_empty(char *previous_file_name, int month, int year);
 void missing_values(char *previous_file_name);
 void wrong_chose(char *choose);
 void memory_error(void);
+void file_not_open(char *curren_file_name);
 
 #endif
