@@ -50,3 +50,8 @@ void memory_error(void)
 {
     fprintf(stderr, "\nERROR: Could not allocate memory.\n");
 }
+
+void file_not_open(char *curren_file_name)
+{
+    fprintf(stderr, "ERROR: Could not open \"%s\" file, either you don't have the permissions to create new files or the program doesn't.\n", curren_file_name);
+}

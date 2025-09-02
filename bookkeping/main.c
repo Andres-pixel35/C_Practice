@@ -17,14 +17,16 @@
 
 int main(void)
 {
-    printf("=== BEFORE EXECUTING THIS PROGRAM, MAKE SURE YOU HAVE READ THE README FILE.===\n\n");
+    printf("=== BEFORE EXECUTING THIS PROGRAM, MAKE SURE YOU HAVE READ THE README FILE ===\n\n");
     // here i will define several local functions for main
-    bool first_time = true;
-    int month = 0;
+    bool first_time_general = true;
+    bool fisrt_time_current_month = true; // so, the file for the current month might be open in two differents parts, so I need to check that 
+    int month = 0;                        // in order to don't write the same twice
     int year = 0;
     double previous_balance = 0;
     double new_balance = 0;
     double income = 0;
+    char current_file_name[12];
     PreviousInvestment previous_investment = {0};
     PreviousSavings previous_savings = {0};
     Investment new_investment = {0};
@@ -38,12 +40,12 @@ int main(void)
     }
     else if (result == FILE_FOUND)
     {
-        first_time = false;
+        first_time_general = false;
         printf("A file has been found, therefore the program will use the month before the one you add afterwards to make your bookkeping.\n");
     }
     else if (result == FILE_NOT_FOUND)
     {
-        first_time = true;
+        first_time_general = true;
         printf("No file has been found, therefore this program will work assuming this is your first time\n");
     }
 
@@ -62,7 +64,7 @@ int main(void)
     } while (!only_numbers(&year, MAX_LEN_YEAR));
 
     // The program will only search for the information in the previous month if it exists, aka it's there at least one file that fulfil the requirements
-    if (!first_time)
+    if (!first_time_general)
     {
         int previous_month = get_previous_month(month);
         int previous_year = year;
@@ -79,7 +81,7 @@ int main(void)
             }
         }
 
-        snprintf(previous_file_name, sizeof(previous_file_name), "%02d_%04d.txt", previous_month, previous_year);
+        build_file_name(previous_file_name, SIZE_FILE_NAME, previous_month, previous_year);
 
         FILE *previous_bookkeping = fopen(previous_file_name, "r");
         if (!previous_bookkeping)
@@ -113,6 +115,38 @@ int main(void)
         }
 
         fclose(previous_bookkeping);
+
+        // now I need to know if the user have spend some of the money of their savings in order to be able to reflect the accurate savings they have
+
+        bool is_valid = true;
+
+        printf("Have you spent some money from your savings? ");
+        char *choose = ask_choose();
+        if (choose == NULL)
+        {
+            return ERR_MEMORY;
+        }
+
+        switch (choose[0])
+        {
+        case 'y':
+            build_file_name(current_file_name, SIZE_FILE_NAME, month, year);
+            FILE *current_bookkeping = fopen(current_file_name, "a");
+            if (!current_bookkeping)
+            {
+                free(choose);
+                file_not_open(current_file_name);
+                return ERR_FILE;
+            }
+
+            fclose(current_bookkeping);
+            break;
+        
+        case 'n':
+            break;
+        }
+        free(choose);
+
     }
     else
     {

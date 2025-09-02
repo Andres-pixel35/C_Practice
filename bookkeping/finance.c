@@ -195,3 +195,8 @@ double get_values_double(int size)
         return value;
     }
 }
+
+void build_file_name(char *file_name, size_t size ,int month, int year)
+{
+    snprintf(file_name, size, "%02d_%04d.txt", month, year);
+}
