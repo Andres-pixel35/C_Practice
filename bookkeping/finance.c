@@ -200,3 +200,9 @@ void build_file_name(char *file_name, size_t size ,int month, int year)
 {
     snprintf(file_name, size, "%02d_%04d.txt", month, year);
 }
+
+
+void build_personal_report(char *file_name, size_t size, int month, int year)
+{
+    snprintf(file_name, size, "%02d_%04d_Personal_Report.txt", month, year);
+}

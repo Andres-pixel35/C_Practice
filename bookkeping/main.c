@@ -12,6 +12,7 @@
 #define MAX_LEN_MONTH 2   // this is to check the length of the input, if it has more than 2 characters it's obviously not a month
 #define MAX_LEN_YEAR 4    // here it's the same, and it also works to avoid overflow the atoi in helpers.c
 #define SIZE_FILE_NAME 12 // so, 12 characters due to the restrictions for the name 'MM_YYYY.txt' + '\0' = 12
+#define SIZE_PERSONAL_REPORT_FILE 28 // so, 'MM_YYYY_Personal_Report.txt' = 27 + '\0' = 28
 #define FIRST_MONTH 1     // i need to check if the current month is 12, if so then I have to set it to 12 and reduce the year by 1
 #define MAX_LEN_DOUBLE 15 // if you realy have this amount of money, I don't know what are you doing here
 
@@ -26,7 +27,8 @@ int main(void)
     double previous_balance = 0;
     double new_balance = 0;
     double income = 0;
-    char current_file_name[12];
+    char current_file_name[SIZE_FILE_NAME];
+    char personal_report_name[SIZE_PERSONAL_REPORT_FILE];
     PreviousInvestment previous_investment = {0};
     PreviousSavings previous_savings = {0};
     Investment new_investment = {0};
@@ -119,7 +121,7 @@ int main(void)
 
         fclose(previous_bookkeping);
 
-        // now I need to know if the user have spend some of the money of their savings in order to be able to reflect the accurate savings they have
+        // now I need to know if the user have spend some of the money of their savings in order to be able to reflect as accurate as possible the savings they have
 
         bool is_valid = true;
 
@@ -133,16 +135,16 @@ int main(void)
         switch (choose[0])
         {
         case 'y':
-            build_file_name(current_file_name, SIZE_FILE_NAME, month, year);
-            FILE *current_bookkeping = fopen(current_file_name, "a");
-            if (!current_bookkeping)
+            build_personal_report(personal_report_name, SIZE_PERSONAL_REPORT_FILE, month, year);
+            FILE *personal_report_file = fopen(personal_report_name, "a");
+            if (!personal_report_file)
             {
                 free(choose);
                 file_not_open(current_file_name);
                 return ERR_FILE;
             }
 
-            fclose(current_bookkeping);
+            fclose(personal_report_file);
             break;
         
         case 'n':
