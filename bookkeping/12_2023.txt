@@ -1,6 +1,6 @@
 (Test file)
 
-Financial Overview & Key Drivers for 12/2023
+Financial Overview & Key Drivers - 12/2023
 
 - Total income: $1,200.00
 Wage: $900.00 (75.00%)
@@ -8,25 +8,25 @@ Commissions: $150.00 (12.50%)
 Freelance: $100.00 (8.33%)
 
 - Total expenses: $850.00 (70.83% of income)
-Rent: $450.00 (52.94% of expenses)
-Food: $150.00 (17.65% of expenses)
-Transportation: $100.00 (11.76% of expenses)
+Rent: $450.00 (52.94%)
+Food: $150.00 (17.65%)
+Transportation: $100.00 (11.76%)
 
 - Debts: $200.00 (16.67% of income)
-Credit card: $100.00 (50.00% of debts)
-Loan payment: $100.00 (50.00% of debts)
+Credit card: $100.00 (50.00%)
+Loan payment: $100.00 (50.00%)
 
 This month you saved $120.00 (10.00% out of your income this month) and the total of your savings is the following:
 - Savings: $120.00
-Travels: $50.00 (41.67% of savings)
-Planned purchases: $20.00 (16.67% of savings)
-Emergencies: $50.00 (41.67% of savings)
+Travels: $50.00 (41.67%)
+Planned purchases: $20.00 (16.67%)
+Emergencies: $50.00 (41.67%)
 
 This month you invested $150.00 (12.50% out of your income this month) and the total of your investment is the following:
 - Investment: $150.00
-Real estate: $50.00 (33.33% of investment)
-Currencies (forex): $50.00 (33.33% of investment)
-Commodities: $0.00 (0% of investment)
-Stocks: $50.00 (33.33% of investment)
+Real estate: $50.00 (33.33%)
+Currencies (forex): $50.00 (33.33%)
+Commodities: $0.00 (0%)
+Stocks: $50.00 (33.33%)
 
 - Final balance: $-120.00
