@@ -124,6 +124,7 @@ int main(void)
         // now I need to know if the user have spend some of the money of their savings in order to be able to reflect as accurate as possible the savings they have
 
         bool is_valid = true;
+        double validation = 0; // so, I need to check that update_savings when it call get_values_doble does not return a error memory.
 
         printf("Have you spent some money from your savings? ");
         char *choose = ask_choose();
@@ -144,6 +145,30 @@ int main(void)
                 return ERR_FILE;
             }
 
+            printf("\nPlease enter the amount of money that you have spent in each of the following items:");
+            printf("\n(If you have changed nothing in any of them you may enter \"0\" or just press \"enter\").\n");
+
+            validation = update_savings("\n=== SAVINGS FOR FUTURE TRAVELS ===", 
+                &previous_savings.previous_travels, &previous_savings.previous_total_saving, MAX_LEN_DOUBLE);
+            if (validation == ERR_MEMORY)
+            {
+                is_valid = false;
+                fclose(personal_report_file);
+                break;
+            }
+
+            validation = update_savings("\n=== SAVINGS FOR FUTURE PURCHASES ===", 
+                &previous_savings.previous_purchase, &previous_savings.previous_total_saving, MAX_LEN_DOUBLE);
+            if (validation == ERR_MEMORY)
+            {
+                is_valid = false;
+                fclose(personal_report_file);
+                break;
+            }
+
+            validation = update_savings("\n=== SAVINGS FOR EMERGENCIES ===",
+                &previous_savings.previous_emergencies, &previous_savings.previous_total_saving, MAX_LEN_DOUBLE);
+            
             fclose(personal_report_file);
             break;
         
@@ -152,6 +177,10 @@ int main(void)
         }
         free(choose);
 
+        if (!is_valid)
+        {
+            return ERR_MEMORY;
+        }
     }
     else
     {

@@ -137,7 +137,7 @@ int get_previous_investments(FILE *file, PreviousInvestment *investment)
 
 // it checks whether the input is a number and a float, so it keep track of the dots. It if find more than one dot it continues asking until a valid 
 // input in entered.
-double get_values_double(int size)
+double get_values_double(size_t size)
 {
     while (1)
     {
@@ -155,7 +155,7 @@ double get_values_double(int size)
         size_t len = strlen(buffer);
         if (len > size)
         {
-            printf("You can only enter a maximun of %d characters and you entered: %zu. Please try again\n"
+            printf("You can only enter a maximun of %zu characters and you entered: %zu. Please try again\n"
                     "(With this amount of money, I don't know why are you here. Thanks though.)\n", size, len);
 
             free(buffer);
@@ -171,7 +171,6 @@ double get_values_double(int size)
                 if (dots > 1)
                 {
                     printf("No decimal number uses more than one dot, expected input: \"??.??\". Input received \"%s\"\nPlease try again.\n", buffer);
-                    free(buffer);
                     valid = false;
                     break; // stops the for loop
                 }
@@ -179,7 +178,6 @@ double get_values_double(int size)
             else if (!isdigit(buffer[i]))
             {
                 printf("You must enter only digits and at maximum one dot, but you entered: \"%s\"\n", buffer);
-                free(buffer);
                 valid = false; 
                 break;
             }
@@ -187,6 +185,7 @@ double get_values_double(int size)
         
         if (!valid)
         {
+            free(buffer);
             continue;
         }
         
@@ -205,4 +204,49 @@ void build_file_name(char *file_name, size_t size ,int month, int year)
 void build_personal_report(char *file_name, size_t size, int month, int year)
 {
     snprintf(file_name, size, "%02d_%04d_Personal_Report.txt", month, year);
+}
+
+// in a loop prints the message, calls get_values_double and check out that the value-spend entered is less or equal than the given value.
+// it also update the *value and the *total_value.
+double update_savings(const char *message, double *value, double *total_value ,size_t size)
+{
+    while (1)
+    {
+        printf("\n%s\n", message);
+        double spend = get_values_double(size);
+
+        if (spend == ERR_MEMORY)
+        {
+            return ERR_MEMORY;
+        }
+        else if (spend > *value)
+        {
+            printf("You haven't that amount of money in this item, you tried to withdraw \"$%.2f\", but you only have: \"$%.2f\"."
+                    "Please try again. ", spend, *value);
+        
+            continue;
+        }
+
+        *value = *value - spend;
+        *total_value = *total_value - spend;
+        return 0;
+    }
+}
+
+// the following two functions are just to debug, they will be surely eliminated at the end.
+void print_savings(const PreviousSavings *ps) 
+{
+    printf("Total: %.2f\n", ps->previous_total_saving);
+    printf("Travels: %.2f\n", ps->previous_travels);
+    printf("Purchase: %.2f\n", ps->previous_purchase);
+    printf("Emergencies: %.2f\n", ps->previous_emergencies);
+}
+
+void print_investments(const PreviousInvestment *pi)
+{
+    printf("Total: %.2f\n", pi->previous_total_investment);
+    printf("Real estate: %.2f\n", pi->previous_real_estate);
+    printf("Currencies: %.2f\n", pi->previous_currencies);
+    printf("Commodities: %.2f\n", pi->previous_commodities);
+    printf("Stocks: %.2f\n", pi->previous_stocks);
 }
