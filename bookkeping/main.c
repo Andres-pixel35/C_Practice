@@ -141,7 +141,7 @@ int main(void)
             if (!personal_report_file)
             {
                 free(choose);
-                file_not_open(current_file_name);
+                file_not_open(personal_report_name);
                 return ERR_FILE;
             }
 
@@ -168,6 +168,12 @@ int main(void)
 
             validation = update_savings("\n=== SAVINGS FOR EMERGENCIES ===",
                 &previous_savings.previous_emergencies, &previous_savings.previous_total_saving, MAX_LEN_DOUBLE);
+            if (validation == ERR_MEMORY)
+            {
+                is_valid = false;
+                fclose(personal_report_file);
+                break;
+            }
             
             fclose(personal_report_file);
             break;
