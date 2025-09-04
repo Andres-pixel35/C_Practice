@@ -29,3 +29,5 @@ Real estate: $50.00
 Currencies (forex): $50.00
 Commodities: $0.00
 Stocks: $50.00
+
+- Final balance: $-120.00
