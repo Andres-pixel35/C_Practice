@@ -20,9 +20,8 @@ int main(void)
 {
     printf("=== BEFORE EXECUTING THIS PROGRAM, MAKE SURE YOU HAVE READ THE README FILE ===\n\n");
     // here i will define several local functions for main
-    bool first_time_general = true;
-    bool fisrt_time_current_month = true; // so, the file for the current month might be open in two differents parts, so I need to check that 
-    int month = 0;                        // in order to don't write the same twice
+    bool first_time_general = true;  
+    int month = 0;                        
     int year = 0;
     double previous_balance = 0;
     double new_balance = 0;
@@ -119,7 +118,11 @@ int main(void)
             return ERR_FILE;
         }
 
-        fclose(previous_bookkeping);
+        if (fclose(previous_bookkeping) == EOF)
+        {
+            close_file_error(previous_file_name);
+            return ERR_FILE;
+        }
 
         // now I need to know if the user have spend some of the money of their savings in order to be able to reflect as accurate as possible the savings they have
 
@@ -174,8 +177,20 @@ int main(void)
                 fclose(personal_report_file);
                 break;
             }
+
+            if ((validation = write_savings_withdraw(personal_report_file, previous_savings)) == ERR_FILE)
+            {
+                is_valid = false;
+                written_error(personal_report_name);
+                fclose(personal_report_file);
+                break;
+            }
             
-            fclose(personal_report_file);
+            if (fclose(personal_report_file) == EOF)
+            {
+                close_file_error(personal_report_name);
+                return ERR_FILE;
+            }
             break;
         
         case 'n':
@@ -327,5 +342,7 @@ int main(void)
             return ERR_MEMORY;
         }
     }
+
+    print_savings(&previous_savings);
     return 0;
 }

@@ -250,3 +250,53 @@ void print_investments(const PreviousInvestment *pi)
     printf("Commodities: %.2f\n", pi->previous_commodities);
     printf("Stocks: %.2f\n", pi->previous_stocks);
 }
+
+double write_headers(FILE *file, const char *header)
+{
+    if (fprintf(file, "%s", header) < 0)
+    {
+        return ERR_FILE;
+    }
+}
+
+// this function writes in the file the item with the corresponding value
+double write_personal_report(FILE *file, const char *item, double value)
+{
+    if (fprintf(file, "\n%s: $%.2f", item, value) < 0)
+    {
+        return ERR_FILE;
+    }
+    return 0;
+}
+
+// i need to change this logic
+double write_savings_withdraw(FILE *file, PreviousSavings ps)
+{
+    int check = 0;
+
+    if (check = write_headers(file, "CHANGES SINCE THE PREVIOUS MONTH\nSAVINGS WITHDRAWS\n") == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    if (check = write_personal_report(file, "- Savings", ps.previous_total_saving) == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    if (check = write_personal_report(file, "Travels", ps.previous_travels) == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    if (check = write_personal_report(file, "Planned purchases", ps.previous_purchase) == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    if (check = write_personal_report(file, "Emergencies", ps.previous_emergencies) == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+}
