@@ -1,7 +1,6 @@
 CHANGES SINCE THE PREVIOUS MONTH
 SAVINGS WITHDRAWS
 
-- Savings: $117.00
-Travels: $49.00
-Planned purchases: $19.00
-Emergencies: $49.00
+Travels: $1.00
+Planned purchases: $1.00
+Emergencies: $1.00

@@ -229,7 +229,7 @@ double update_savings(const char *message, double *value, double *total_value ,s
 
         *value = *value - spend;
         *total_value = *total_value - spend;
-        return 0;
+        return spend;
     }
 }
 
@@ -269,34 +269,31 @@ double write_personal_report(FILE *file, const char *item, double value)
     return 0;
 }
 
-// i need to change this logic
-double write_savings_withdraw(FILE *file, PreviousSavings ps)
+// it checks header_written, if false it prints the header and checks that no error happens.
+// if true then it will only prints the items.
+double write_savings_withdraw(FILE *file, const char *item, double value, bool *header_written)
 {
-    int check = 0;
+    double check = 0;
 
-    if (check = write_headers(file, "CHANGES SINCE THE PREVIOUS MONTH\nSAVINGS WITHDRAWS\n") == ERR_FILE)
+    if (!*header_written)
     {
-        return ERR_FILE;
+        check = write_headers(file, "CHANGES SINCE THE PREVIOUS MONTH\nSAVINGS WITHDRAWS\n");
+        if (check == ERR_FILE)
+        {
+            written_error();
+            return ERR_FILE;
+        }
+        *header_written = true;
+    }
+    else
+    {
+        check = write_personal_report(file, item, value);
+        if (check == ERR_FILE)
+        {
+            written_error();
+            return ERR_FILE;
+        }
     }
 
-    if (check = write_personal_report(file, "- Savings", ps.previous_total_saving) == ERR_FILE)
-    {
-        return ERR_FILE;
-    }
-
-    if (check = write_personal_report(file, "Travels", ps.previous_travels) == ERR_FILE)
-    {
-        return ERR_FILE;
-    }
-
-    if (check = write_personal_report(file, "Planned purchases", ps.previous_purchase) == ERR_FILE)
-    {
-        return ERR_FILE;
-    }
-
-    if (check = write_personal_report(file, "Emergencies", ps.previous_emergencies) == ERR_FILE)
-    {
-        return ERR_FILE;
-    }
-
+    return 0;
 }
