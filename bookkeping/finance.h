@@ -2,6 +2,7 @@
 #define FINANCE_H
 
 #include "struct.h"
+#include "helpers.h"
 
 int get_previous_savings(FILE *file, PreviousSavings *savings, double *previous_balance);
 int get_previous_investments(FILE *file, PreviousInvestment *investment); 
@@ -12,6 +13,6 @@ double update_savings(const char *message, double *value, double *total_value ,s
 void print_savings(const PreviousSavings *ps);
 double write_personal_report(FILE *file, const char *item, double value);
 double write_headers(FILE *file, const char *header);
-double write_savings_withdraw(FILE *file, PreviousSavings ps);
+double write_savings_withdraw(FILE *file, const char *item, double value, bool *header_written);
 
 #endif

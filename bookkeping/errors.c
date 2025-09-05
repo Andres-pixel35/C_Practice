@@ -56,9 +56,9 @@ void file_not_open(char *curren_file_name)
     fprintf(stderr, "ERROR: Could not open \"%s\" file, either you don't have the permissions to create new files or the program doesn't.\n", curren_file_name);
 }
 
-void written_error(char *file_name)
+void written_error(void)
 {
-    fprintf(stderr, "ERROR: Could not write the information inside \"%s\"\n", file_name);
+    fprintf(stderr, "ERROR: Could not write the information inside the file. It might be due to insufficient memory or a lack of permissions.\n");
 }
 
 void close_file_error(char *file_name)

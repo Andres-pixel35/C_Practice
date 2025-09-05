@@ -16,6 +16,26 @@
 #define FIRST_MONTH 1     // i need to check if the current month is 12, if so then I have to set it to 12 and reduce the year by 1
 #define MAX_LEN_DOUBLE 15 // if you realy have this amount of money, I don't know what are you doing here
 
+// Sets is_valid = false and breaks out of the current block/loop.
+// Use for generic error handling inside switch/case or loops.
+#define HANDLE_MEMORY_ERRORS()\
+        valid = false; \
+        break;         
+
+// Same as HANDLE_ERROR but also closes a file before breaking.
+// Use when a file must be cleaned up on error.
+#define HANDLE_FILE_MEMORY_ERRORS(file)\
+        valid = false;          \
+        fclose(file);           \
+        break;  
+
+// Similar to the previous one, but this one stops the program immediately
+#define HANDLE_FILE_WRITTEN_ERRORS(file, choose)\
+        fclose(file);                   \
+        free(choose);                   \
+        return ERR_MEMORY;
+
+// main
 int main(void)
 {
     printf("=== BEFORE EXECUTING THIS PROGRAM, MAKE SURE YOU HAVE READ THE README FILE ===\n\n");
@@ -126,8 +146,10 @@ int main(void)
 
         // now I need to know if the user have spend some of the money of their savings in order to be able to reflect as accurate as possible the savings they have
 
-        bool is_valid = true;
-        double validation = 0; // so, I need to check that update_savings when it call get_values_doble does not return a error memory.
+        bool valid = true;
+        double value = 0; // it gets the value entered for the user and then it's printed in personal report
+        double check = 0; // it's neccessary to check the value fprintf is returning when called.
+        bool header_written = false; // to only write once the header of savings withdraws
 
         printf("Have you spent some money from your savings? ");
         char *choose = ask_choose();
@@ -148,47 +170,59 @@ int main(void)
                 return ERR_FILE;
             }
 
+            // this one is only to print the header.
+            check = write_savings_withdraw(personal_report_file, "", 0, &header_written);
+            if (check == ERR_FILE)
+            {
+                HANDLE_FILE_WRITTEN_ERRORS(personal_report_file, choose);
+            }
+
             printf("\nPlease enter the amount of money that you have spent in each of the following items:");
             printf("\n(If you have changed nothing in any of them you may enter \"0\" or just press \"enter\").\n");
 
-            validation = update_savings("\n=== SAVINGS FOR FUTURE TRAVELS ===", 
+            value = update_savings("\n=== SAVINGS FOR FUTURE TRAVELS ===", 
                 &previous_savings.previous_travels, &previous_savings.previous_total_saving, MAX_LEN_DOUBLE);
-            if (validation == ERR_MEMORY)
+            if (value == ERR_MEMORY)
             {
-                is_valid = false;
-                fclose(personal_report_file);
-                break;
+                HANDLE_FILE_MEMORY_ERRORS(personal_report_file);
             }
 
-            validation = update_savings("\n=== SAVINGS FOR FUTURE PURCHASES ===", 
+            check = write_savings_withdraw(personal_report_file, "Travels", value, &header_written);
+            if (check == ERR_FILE)
+            {
+                HANDLE_FILE_WRITTEN_ERRORS(personal_report_file, choose);
+            }
+
+            value = update_savings("\n=== SAVINGS FOR FUTURE PURCHASES ===", 
                 &previous_savings.previous_purchase, &previous_savings.previous_total_saving, MAX_LEN_DOUBLE);
-            if (validation == ERR_MEMORY)
+            if (value == ERR_MEMORY)
             {
-                is_valid = false;
-                fclose(personal_report_file);
-                break;
+                HANDLE_FILE_MEMORY_ERRORS(personal_report_file);
             }
 
-            validation = update_savings("\n=== SAVINGS FOR EMERGENCIES ===",
+            check = write_savings_withdraw(personal_report_file, "Planned purchases", value, &header_written);
+            if (check == ERR_FILE)
+            {
+                HANDLE_FILE_WRITTEN_ERRORS(personal_report_file, choose);
+            }
+
+            value = update_savings("\n=== SAVINGS FOR EMERGENCIES ===",
                 &previous_savings.previous_emergencies, &previous_savings.previous_total_saving, MAX_LEN_DOUBLE);
-            if (validation == ERR_MEMORY)
+            if (value == ERR_MEMORY)
             {
-                is_valid = false;
-                fclose(personal_report_file);
-                break;
+                HANDLE_FILE_MEMORY_ERRORS(personal_report_file);
             }
 
-            if ((validation = write_savings_withdraw(personal_report_file, previous_savings)) == ERR_FILE)
+            check = write_savings_withdraw(personal_report_file, "Emergencies", value, &header_written);
+            if (check == ERR_FILE)
             {
-                is_valid = false;
-                written_error(personal_report_name);
-                fclose(personal_report_file);
-                break;
+                HANDLE_FILE_WRITTEN_ERRORS(personal_report_file, choose);
             }
             
             if (fclose(personal_report_file) == EOF)
             {
                 close_file_error(personal_report_name);
+                free(choose);
                 return ERR_FILE;
             }
             break;
@@ -198,7 +232,7 @@ int main(void)
         }
         free(choose);
 
-        if (!is_valid)
+        if (!valid)
         {
             return ERR_MEMORY;
         }
@@ -247,24 +281,21 @@ int main(void)
             previous_savings.previous_travels = get_values_double(MAX_LEN_DOUBLE);
             if (previous_savings.previous_travels == ERR_MEMORY)
             {
-                valid = false;
-                break;
+                HANDLE_MEMORY_ERRORS();
             }
 
             printf("\n=== Savings for future purchases ===\n");
             previous_savings.previous_purchase = get_values_double(MAX_LEN_DOUBLE);
             if (previous_savings.previous_purchase == ERR_MEMORY)
             {
-                valid = false;
-                break;
+                HANDLE_MEMORY_ERRORS();
             }
 
             printf("\n=== Savings for emergencies ===\n");
             previous_savings.previous_emergencies = get_values_double(MAX_LEN_DOUBLE);
             if (previous_savings.previous_emergencies == ERR_MEMORY)
             {
-                valid = false;
-                break;
+                HANDLE_MEMORY_ERRORS();
             }
 
             previous_savings.previous_total_saving = previous_savings.previous_travels + previous_savings.previous_purchase + previous_savings.previous_emergencies;
@@ -297,32 +328,28 @@ int main(void)
                 previous_investment.previous_real_estate = get_values_double(MAX_LEN_DOUBLE);
                 if (previous_investment.previous_real_estate == ERR_MEMORY)
                 {
-                    valid = false;
-                    break;
+                    HANDLE_MEMORY_ERRORS();
                 }
 
                 printf("\n=== Currencies Investment ===\n");
                 previous_investment.previous_currencies = get_values_double(MAX_LEN_DOUBLE);
                 if (previous_investment.previous_currencies == ERR_MEMORY)
                 {
-                    valid = false;
-                    break;
+                    HANDLE_MEMORY_ERRORS();
                 }
 
                 printf("\n=== Commodities Investment ===\n");
                 previous_investment.previous_commodities = get_values_double(MAX_LEN_DOUBLE);
                 if (previous_investment.previous_commodities == ERR_MEMORY)
                 {
-                    valid = false;
-                    break;
+                    HANDLE_MEMORY_ERRORS();
                 }
 
                 printf("\n=== Stocks ===\n");
                 previous_investment.previous_stocks = get_values_double(MAX_LEN_DOUBLE);
                 if (previous_investment.previous_stocks == ERR_MEMORY)
                 {
-                    valid = false;
-                    break;
+                    HANDLE_MEMORY_ERRORS();
                 }
 
                 previous_investment.previous_total_investment = previous_investment.previous_real_estate +

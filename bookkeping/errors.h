@@ -15,7 +15,7 @@ void missing_values(char *previous_file_name);
 void wrong_chose(char *choose);
 void memory_error(void);
 void file_not_open(char *curren_file_name);
-void written_error(char * file_name);
+void written_error(void);
 void close_file_error(char *file_name);
 
 #endif
