@@ -38,4 +38,11 @@ typedef struct Investment
     double stocks;
 }
 Investment;
+
+typedef struct Items
+{
+    char name[50];
+    double value;
+}
+Items;
 #endif

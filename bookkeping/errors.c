@@ -66,3 +66,7 @@ void close_file_error(char *file_name)
     fprintf(stderr, "ERROR: Could not close the file \"%s\". It might be due to insufficient memory.”\n", file_name);
 }
 
+void add_item_error(void)
+{
+    fprintf(stderr, "You can only add at maximum of 100 items.\n");
+}
