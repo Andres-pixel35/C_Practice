@@ -202,14 +202,14 @@ int main(void)
                 HANDLE_FILE_MEMORY_ERRORS(personal_report_file);
             }
 
+            update_item(savings_withdraws, &index, "Emergencies", value);
+
             // this one is only to print the header.
             check = write_personal_report(personal_report_file, "Withdrawals from Savings\n", 0, &header_written);
             if (check == ERR_FILE)
             {
                 HANDLE_FILE_WRITTEN_ERRORS(personal_report_file, choose);
             }
-
-            update_item(savings_withdraws, &index, "Emergencies", value);
 
             final_value = sum_values_items(savings_withdraws, index);
 
@@ -303,7 +303,6 @@ int main(void)
                 HANDLE_MEMORY_ERRORS();
             }
 
-            printf("\n=== Savings for emergencies ===\n");
             get_previous_values("=== SAVINGS FOR EMERGENCIES ===", 
                 &previous_savings.previous_emergencies, &previous_savings.previous_total_saving, MAX_LEN_DOUBLE);
             if (previous_savings.previous_emergencies == ERR_MEMORY)
