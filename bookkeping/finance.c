@@ -233,6 +233,20 @@ double update_savings(const char *message, double *value, double *total_value ,s
     }
 }
 
+double get_previous_values(const char *message, double *value, double *total_value, size_t size)
+{
+    printf("\n%s\n", message);
+
+    *value = get_values_double(size);
+    if (*value == ERR_MEMORY)
+    {
+        return ERR_MEMORY;
+    }
+
+    *total_value = *total_value + *value;
+    return 0;
+}
+
 // the following two functions are just to debug, they will be surely eliminated at the end.
 void print_savings(const PreviousSavings *ps) 
 {
@@ -260,7 +274,7 @@ double write_headers(FILE *file, const char *header)
 }
 
 // this function writes in the file the item with the corresponding value
-double write_personal_report(FILE *file, const char *item, double value)
+double write_items(FILE *file, const char *item, double value)
 {
     if (fprintf(file, "\n%s: $%.2f", item, value) < 0)
     {
@@ -271,13 +285,13 @@ double write_personal_report(FILE *file, const char *item, double value)
 
 // it checks header_written, if false it prints the header and checks that no error happens.
 // if true then it will only prints the items.
-double write_savings_withdraw(FILE *file, const char *item, double value, bool *header_written)
+double write_personal_report(FILE *file, const char *name, double value, bool *header_written)
 {
     double check = 0;
 
     if (!*header_written)
     {
-        check = write_headers(file, "CHANGES SINCE THE PREVIOUS MONTH\nSAVINGS WITHDRAWS\n");
+        check = write_headers(file, name);
         if (check == ERR_FILE)
         {
             written_error();
@@ -287,7 +301,7 @@ double write_savings_withdraw(FILE *file, const char *item, double value, bool *
     }
     else
     {
-        check = write_personal_report(file, item, value);
+        check = write_items(file, name, value);
         if (check == ERR_FILE)
         {
             written_error();
@@ -296,4 +310,30 @@ double write_savings_withdraw(FILE *file, const char *item, double value, bool *
     }
 
     return 0;
+}
+
+// this receives the array of items and fill them up with the necessary information, and checks that the number of item is lower than the maximum permited 
+bool update_item(Items arr[], int *index, const char *name, double value)
+{
+    if (*index > 100)
+    {
+        add_item_error();
+        return false;
+    }
+
+    strcpy(arr[*index].name, name);
+    arr[*index].value = value;
+    *index = *index + 1;
+    return true;
+}
+
+double sum_values_items(Items arr[], int index)
+{
+    int final_value = 0;
+    for (int i = 0; i < index; i++)
+    {
+        final_value = final_value + arr[i].value;
+    }
+
+    return final_value;
 }

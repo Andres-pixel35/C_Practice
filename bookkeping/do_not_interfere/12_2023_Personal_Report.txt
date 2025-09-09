@@ -1,6 +1,6 @@
 (test file)
 
-Personal Finance Report — 12/2023
+Personal Finance Report
 
 - Total income: $1,200.00
 Wage: $900.00

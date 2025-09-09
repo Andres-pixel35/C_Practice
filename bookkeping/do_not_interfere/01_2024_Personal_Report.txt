@@ -1,6 +1,8 @@
-CHANGES SINCE THE PREVIOUS MONTH
-SAVINGS WITHDRAWS
+(test file)
 
+Withdrawals from Savings
+
+- Savings: $3.00
 Travels: $1.00
 Planned purchases: $1.00
 Emergencies: $1.00
