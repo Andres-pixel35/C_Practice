@@ -47,12 +47,17 @@ int main(void)
     double previous_balance = 0;
     double new_balance = 0;
     double income = 0;
+    double expense = 0;
+    double debt = 0;
     char current_file_name[SIZE_FILE_NAME];
     char personal_report_name[SIZE_PERSONAL_REPORT_FILE];
     PreviousInvestment previous_investment = {0};
     PreviousSavings previous_savings = {0};
     Investment new_investment = {0};
     Savings new_savings = {0};
+    Items incomes[MAX_ITEMS];
+    Items expenses[MAX_ITEMS];
+    Items debts[MAX_ITEMS];
 
     int result = has_files_wildcard("??_????.txt");
     if (result == ERR_DIC)
@@ -184,7 +189,7 @@ int main(void)
                 HANDLE_FILE_MEMORY_ERRORS(personal_report_file);
             }
 
-            update_item(savings_withdraws, &index, "Travels", value);
+            update_item(savings_withdraws, &index, "Travels", value, MAX_ITEMS);
 
             value = update_savings("\n=== SAVINGS FOR FUTURE PURCHASES ===", 
                 &previous_savings.previous_purchase, &previous_savings.previous_total_saving, MAX_LEN_DOUBLE);
@@ -193,7 +198,7 @@ int main(void)
                 HANDLE_FILE_MEMORY_ERRORS(personal_report_file);
             }
 
-            update_item(savings_withdraws, &index, "Planned purchases", value);
+            update_item(savings_withdraws, &index, "Planned purchases", value, MAX_ITEMS);
 
             value = update_savings("\n=== SAVINGS FOR EMERGENCIES ===",
                 &previous_savings.previous_emergencies, &previous_savings.previous_total_saving, MAX_LEN_DOUBLE);
@@ -202,7 +207,7 @@ int main(void)
                 HANDLE_FILE_MEMORY_ERRORS(personal_report_file);
             }
 
-            update_item(savings_withdraws, &index, "Emergencies", value);
+            update_item(savings_withdraws, &index, "Emergencies", value, MAX_ITEMS);
 
             // this one is only to print the header.
             check = write_personal_report(personal_report_file, "Withdrawals from Savings\n", 0, &header_written);
@@ -221,13 +226,10 @@ int main(void)
             }
 
             // prints all the withdraws in order
-            for (int i = 0; i < index; i++)
+            check = write_loop_items(personal_report_file, savings_withdraws, index, &header_written);
+            if (check == ERR_FILE)
             {
-                check = write_personal_report(personal_report_file, savings_withdraws[i].name, savings_withdraws[i].value, &header_written);
-                if (check == ERR_FILE)
-                {
-                    HANDLE_FILE_WRITTEN_ERRORS(personal_report_file, choose);
-                }
+                HANDLE_FILE_WRITTEN_ERRORS(personal_report_file, choose);
             }
             
             if (fclose(personal_report_file) == EOF)
@@ -377,8 +379,96 @@ int main(void)
         }
     }
 
-    print_savings(&previous_savings);
-    print_investments(&previous_investment);
-    printf("%.2f\n", previous_balance);
+    // now that the program has all the previous values, it is time to collect information from this month
+    build_personal_report(personal_report_name, SIZE_PERSONAL_REPORT_FILE, month, year);
+    FILE *personal_report_file = fopen(personal_report_name, "a");
+    if (!personal_report_file)
+    {
+        file_not_open(personal_report_name);
+        return ERR_FILE;
+    }
+
+    int index_incomes = 0;
+    int index_expenses = 0;
+    int index_debts = 0;
+    double check = 0;
+    bool header_written = false; 
+
+    printf("\nWelcome to the interface where you may add all the items of your incomes, expenses and debts you had this month.\n"
+        "Let's begin with your incomes, please write afterwards all you incomes you had this month.\n"
+        "(Remember add the name of the item and its value, do not forget that you can only add %d differents items per category).\n", MAX_ITEMS);
+
+    check = get_items("Incomes", incomes, &index_incomes, MAX_ITEMS);
+    if (check == ERR_MEMORY)
+    {
+        return ERR_MEMORY;
+    }
+
+    income = sum_values_items(incomes, index_incomes);
+
+    check = get_items("Expenses", expenses, &index_expenses, MAX_ITEMS);
+    if (check == ERR_MEMORY)
+    {
+        return ERR_MEMORY;
+    }
+
+    expense = sum_values_items(expenses, index_expenses);
+
+    check = get_items("Debts", debts, &index_debts, MAX_ITEMS);
+    if (check == ERR_MEMORY)
+    {
+        return ERR_MEMORY;
+    }
+
+    debt = sum_values_items(debts, index_debts);
+
+    check = write_personal_report(personal_report_file, "\nPersonal Finance Report\n", 0, &header_written);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    //after get all the value, it prints all the information into the file
+    check = write_personal_report(personal_report_file, "- Incomes", income, &header_written);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_loop_items(personal_report_file, incomes, index_incomes, &header_written);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_personal_report(personal_report_file, "\n- Expenses", expense, &header_written);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_loop_items(personal_report_file, expenses, index_expenses, &header_written);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_personal_report(personal_report_file, "\n- Debts", debt, &header_written);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_loop_items(personal_report_file, debts, index_debts, &header_written);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    if (fclose(personal_report_file) == EOF)
+    {
+        close_file_error(personal_report_name);
+        return ERR_FILE;
+    }
     return 0;
 }

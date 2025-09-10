@@ -6,6 +6,7 @@
 #define ERR_DIC -53
 #define ERR_YEAR -54
 #define ERR_CHOOSE -55
+#define ERR_NUMBER_ITEMS -56
 
 void dic_not_open(void);
 void err_year(void);
@@ -17,6 +18,6 @@ void memory_error(void);
 void file_not_open(char *curren_file_name);
 void written_error(void);
 void close_file_error(char *file_name);
-void add_item_error(void);
+void add_item_error(size_t MAX_ITEMS);
 
 #endif

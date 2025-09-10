@@ -253,4 +253,18 @@ char *ask_choose(void)
     }
 }
 
+// it checks the len of the item and return true if it's lower than 50, false otherwise
+bool checK_item(char *buffer)
+{
+    size_t len = strlen(buffer);
+
+    if (len > 50)
+    {
+        printf("You can not write an item with more than 50 characters, and you write \"%zu\". Please try again.\n", len);
+        return false;
+    }
+
+    return true;
+}
+
 

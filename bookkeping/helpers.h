@@ -12,5 +12,6 @@ int get_previous_month(int month);
 int get_previous_year(int year);
 int check_choose(char *choose);
 char *ask_choose(void); 
+bool checK_item(char *buffer);
 
 #endif

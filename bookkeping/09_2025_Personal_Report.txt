@@ -1,0 +1,16 @@
+(test file)
+
+Personal Finance Report
+
+- Incomes: $1500.25
+wage: $1000.00
+commissions: $500.25
+
+- Expenses: $412.30
+rent: $302.20
+food: $100.00
+snacks: $10.10
+
+- Debts: $350.50
+loan: $300.00
+credit card: $50.50
