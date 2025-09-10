@@ -41,7 +41,7 @@ Investment;
 
 typedef struct Items
 {
-    char name[50];
+    char name[51];
     double value;
 }
 Items;

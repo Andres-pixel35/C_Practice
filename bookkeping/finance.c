@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <stdlib.h>
 
 #include "finance.h"
@@ -144,7 +145,7 @@ double get_values_double(size_t size)
         int dots = 0;
         bool valid = true;
         printf("\nYou may enter decimal numbers if you need to.\n");
-        printf("How much: ");
+        printf("Value: ");
         char *buffer = read_input();
         if (buffer == NULL)
         {
@@ -313,11 +314,11 @@ double write_personal_report(FILE *file, const char *name, double value, bool *h
 }
 
 // this receives the array of items and fill them up with the necessary information, and checks that the number of item is lower than the maximum permited 
-bool update_item(Items arr[], int *index, const char *name, double value)
+bool update_item(Items arr[], int *index, const char *name, double value, size_t MAX_ITEMS)
 {
-    if (*index > 100)
+    if (*index == MAX_ITEMS)
     {
-        add_item_error();
+        add_item_error(MAX_ITEMS);
         return false;
     }
 
@@ -329,11 +330,68 @@ bool update_item(Items arr[], int *index, const char *name, double value)
 
 double sum_values_items(Items arr[], int index)
 {
-    int final_value = 0;
+    double final_value = 0;
     for (int i = 0; i < index; i++)
     {
         final_value = final_value + arr[i].value;
     }
 
     return final_value;
+}
+
+double get_items(const char *message, Items arr[], int *index, size_t MAX_ITEMS)
+{
+    while (1)
+    {
+        if (*index == MAX_ITEMS)
+        {
+            add_item_error(MAX_ITEMS);
+            printf("You have reached the maximum number of items you can add for \"%s\".\n", message);
+            return ERR_NUMBER_ITEMS;
+        }
+        printf("\n=== %s ===\n", message);
+        printf("Please write \"exit\" in item when you want to stop adding more %s.\n", message);
+
+        printf("Item: ");
+        char *item = read_input();
+        if (item == NULL)
+        {
+            memory_error();
+            return ERR_MEMORY;
+        }
+        else if (!checK_item(item))
+        {
+            free(item);
+            continue;
+        }
+        else if (strcasecmp(item, "exit") == 0)
+        {
+            free(item);
+            return 0;
+        }
+
+        double value = get_values_double(15);
+
+        if (!update_item(arr, index, item, value, MAX_ITEMS))
+        {
+            free(item);
+            return ERR_NUMBER_ITEMS;
+        }
+
+        free(item);
+        continue;
+    }
+}
+
+double write_loop_items(FILE *file, Items arr[], int index, bool *header_written)
+{
+    double check = 0;
+    for (int i = 0; i < index; i++)
+    {
+        check = write_personal_report(file, arr[i].name, arr[i].value, header_written);
+        if (check == ERR_FILE)
+        {
+            return ERR_FILE;
+        }
+    }
 }
