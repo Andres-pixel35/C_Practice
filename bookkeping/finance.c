@@ -248,24 +248,6 @@ double get_previous_values(const char *message, double *value, double *total_val
     return 0;
 }
 
-// the following two functions are just to debug, they will be surely eliminated at the end.
-void print_savings(const PreviousSavings *ps) 
-{
-    printf("Total: %.2f\n", ps->previous_total_saving);
-    printf("Travels: %.2f\n", ps->previous_travels);
-    printf("Purchase: %.2f\n", ps->previous_purchase);
-    printf("Emergencies: %.2f\n", ps->previous_emergencies);
-}
-
-void print_investments(const PreviousInvestment *pi)
-{
-    printf("Total: %.2f\n", pi->previous_total_investment);
-    printf("Real estate: %.2f\n", pi->previous_real_estate);
-    printf("Currencies: %.2f\n", pi->previous_currencies);
-    printf("Commodities: %.2f\n", pi->previous_commodities);
-    printf("Stocks: %.2f\n", pi->previous_stocks);
-}
-
 double write_headers(FILE *file, const char *header)
 {
     if (fprintf(file, "%s", header) < 0)
@@ -339,7 +321,38 @@ double sum_values_items(Items arr[], int index)
     return final_value;
 }
 
-double get_items(const char *message, Items arr[], int *index, size_t MAX_ITEMS)
+// it compares the value of the new item updated in get items with the top 3 items from the category within this func is called
+// if bigger, it updates the value inside the top 3 and the name as well as the rest of the top if need it.
+void compare_items(Items top[], Items new[], int *index)
+{
+    int real_index = *index - 1; // since index was add 1 in update item, the index of the item new I want to compare is that index minus 1
+
+    for (int i = 0; i < 3; i++)
+    {
+        if (top[i].value < new[real_index].value)
+        {
+            if (i == 0)
+            {
+                strcpy(top[2].name, top[1].name);
+                top[2].value = top[1].value;
+
+                strcpy(top[1].name, top[0].name);
+                top[1].value = top[0].value;
+            }
+            else if (i == 1)
+            {
+                strcpy(top[2].name, top[1].name);
+                top[2].value = top[1].value;
+            }
+
+            strcpy(top[i].name, new[real_index].name);
+            top[i].value = new[real_index].value;
+            break;
+        }
+    }
+}
+
+double get_items(const char *message, Items arr[], Items top[], int *index, size_t MAX_ITEMS)
 {
     while (1)
     {
@@ -371,12 +384,20 @@ double get_items(const char *message, Items arr[], int *index, size_t MAX_ITEMS)
         }
 
         double value = get_values_double(15);
+        if (value < 1)
+        {
+            free(item);
+            printf("You must write a value greater than 0 per each item.\n");
+            continue;
+        }
 
         if (!update_item(arr, index, item, value, MAX_ITEMS))
         {
             free(item);
             return ERR_NUMBER_ITEMS;
         }
+
+        compare_items(top, arr, index);
 
         free(item);
         continue;
