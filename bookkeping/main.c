@@ -16,6 +16,8 @@
 #define FIRST_MONTH 1     // i need to check if the current month is 12, if so then I have to set it to 12 and reduce the year by 1
 #define MAX_LEN_DOUBLE 15 // if you realy have this amount of money, I don't know what are you doing here
 #define MAX_ITEMS 100 // the max number of items the user would be able to enter
+#define TOP_SIZE 3
+#define SAVINGS_WITHDRAWS_SIZE 3
 
 // Sets is_valid = false and breaks out of the current block/loop.
 // Use for generic error handling inside switch/case or loops.
@@ -55,9 +57,12 @@ int main(void)
     PreviousSavings previous_savings = {0};
     Investment new_investment = {0};
     Savings new_savings = {0};
-    Items incomes[MAX_ITEMS];
-    Items expenses[MAX_ITEMS];
-    Items debts[MAX_ITEMS];
+    Items incomes[MAX_ITEMS] = { "", 0 };
+    Items expenses[MAX_ITEMS] = { "", 0 };
+    Items debts[MAX_ITEMS] = { "", 0 };
+    Items top_incomes[TOP_SIZE] = { "", 0 };
+    Items top_expenses[TOP_SIZE] = { "", 0 };
+    Items top_debts[TOP_SIZE] = { "", 0 };
 
     int result = has_files_wildcard("??_????.txt");
     if (result == ERR_DIC)
@@ -156,7 +161,7 @@ int main(void)
         double value = 0; // it gets the value entered for the user and then it's printed in personal report
         double check = 0; // it's neccessary to check the value fprintf is returning when called.
         bool header_written = false; // to only write once the header of savings withdraws
-        Items savings_withdraws[MAX_ITEMS]; 
+        Items savings_withdraws[SAVINGS_WITHDRAWS_SIZE]; 
         int index = 0;
         double final_value;
 
@@ -398,7 +403,7 @@ int main(void)
         "Let's begin with your incomes, please write afterwards all you incomes you had this month.\n"
         "(Remember add the name of the item and its value, do not forget that you can only add %d differents items per category).\n", MAX_ITEMS);
 
-    check = get_items("Incomes", incomes, &index_incomes, MAX_ITEMS);
+    check = get_items("Incomes", incomes, top_incomes, &index_incomes, MAX_ITEMS);
     if (check == ERR_MEMORY)
     {
         return ERR_MEMORY;
@@ -406,7 +411,7 @@ int main(void)
 
     income = sum_values_items(incomes, index_incomes);
 
-    check = get_items("Expenses", expenses, &index_expenses, MAX_ITEMS);
+    check = get_items("Expenses", expenses, top_expenses, &index_expenses, MAX_ITEMS);
     if (check == ERR_MEMORY)
     {
         return ERR_MEMORY;
@@ -414,7 +419,7 @@ int main(void)
 
     expense = sum_values_items(expenses, index_expenses);
 
-    check = get_items("Debts", debts, &index_debts, MAX_ITEMS);
+    check = get_items("Debts", debts, top_debts, &index_debts, MAX_ITEMS);
     if (check == ERR_MEMORY)
     {
         return ERR_MEMORY;
@@ -422,14 +427,14 @@ int main(void)
 
     debt = sum_values_items(debts, index_debts);
 
-    check = write_personal_report(personal_report_file, "\nPersonal Finance Report\n", 0, &header_written);
+    check = write_personal_report(personal_report_file, "\n\nPersonal Finance Report\n", 0, &header_written);
     if (check == ERR_FILE)
     {
         return ERR_FILE;
     }
 
-    //after get all the value, it prints all the information into the file
-    check = write_personal_report(personal_report_file, "- Incomes", income, &header_written);
+    //after get all the values, it prints all the information into the file
+    check = write_personal_report(personal_report_file, "- Total income", income, &header_written);
     if (check == ERR_FILE)
     {
         return ERR_FILE;
@@ -441,7 +446,7 @@ int main(void)
         return ERR_FILE;
     }
 
-    check = write_personal_report(personal_report_file, "\n- Expenses", expense, &header_written);
+    check = write_personal_report(personal_report_file, "\n- Total expenses", expense, &header_written);
     if (check == ERR_FILE)
     {
         return ERR_FILE;
@@ -464,7 +469,6 @@ int main(void)
     {
         return ERR_FILE;
     }
-
     if (fclose(personal_report_file) == EOF)
     {
         close_file_error(personal_report_name);

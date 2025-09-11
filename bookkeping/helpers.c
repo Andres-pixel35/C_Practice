@@ -258,9 +258,19 @@ bool checK_item(char *buffer)
 {
     size_t len = strlen(buffer);
 
-    if (len > 50)
+    if (len < 1)
+    {
+        printf("You must at least write one character.\n");
+        return false;
+    }
+    else if (len > 50)
     {
         printf("You can not write an item with more than 50 characters, and you write \"%zu\". Please try again.\n", len);
+        return false;
+    }
+    else if (isspace(buffer[0]))
+    {
+        printf("You can not start the name of your item with a space or tab.\n");
         return false;
     }
 
