@@ -416,3 +416,84 @@ double write_loop_items(FILE *file, Items arr[], int index, bool *header_written
         }
     }
 }
+
+// it ask for a value, check it and sum it with the total
+double get_financial_input(const char *message, double *value, double *total, size_t size)
+{
+    printf("\n%s\n", message);
+    *value = get_values_double(size);
+    if (*value == ERR_MEMORY)
+    {
+        return ERR_MEMORY;
+    }
+
+    *total = *total + *value;
+    return 0;
+}
+
+double write_savings(FILE *file, Savings s)
+{
+    double check = 0;
+    check = write_items(file, "\n- Savings", s.total_saving);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "Travels", s.travels);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "Planned purchases", s.purchase);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "Emergencies", s.emergencies);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    return 0;
+}
+
+double write_investments(FILE *file, Investment iv)
+{
+    double check = 0;
+
+    check = write_items(file, "\n- Investment", iv.investment);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "Real estate", iv.real_estate);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "Currencies", iv.currencies);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "Commodities", iv.commodities);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "Stocks", iv.stocks);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    return 0;
+}
