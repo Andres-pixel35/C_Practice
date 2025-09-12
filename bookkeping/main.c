@@ -398,6 +398,7 @@ int main(void)
     int index_debts = 0;
     double check = 0;
     bool header_written = false; 
+    bool valid = true;
 
     printf("\nWelcome to the interface where you may add all the items of your incomes, expenses and debts you had this month.\n"
         "Let's begin with your incomes, please write afterwards all you incomes you had this month.\n"
@@ -409,7 +410,7 @@ int main(void)
         return ERR_MEMORY;
     }
 
-    income = sum_values_items(incomes, index_incomes);
+    income = (sum_values_items(incomes, index_incomes) + previous_balance);
 
     check = get_items("Expenses", expenses, top_expenses, &index_expenses, MAX_ITEMS);
     if (check == ERR_MEMORY)
@@ -427,13 +428,112 @@ int main(void)
 
     debt = sum_values_items(debts, index_debts);
 
+    printf("\nHave you saved any amount of money this month? ");
+    char *choose = ask_choose();
+    if (choose == NULL)
+    {
+        return ERR_MEMORY;
+    }
+
+    switch (choose[0])
+    {
+        case 'y':
+
+            printf("\nIf you have saved nothing in any of the following items you may enter \"0\" or just press \"enter\".\n");
+
+            check = get_financial_input("=== SAVINGS FOR FUTURE TRAVELS ===",
+            &new_savings.travels, &new_savings.total_saving, MAX_LEN_DOUBLE);
+            if (check == ERR_MEMORY)
+            {
+                HANDLE_MEMORY_ERRORS();
+            }
+
+            check = get_financial_input("=== SAVINGS FOR FUTURE PURCHASES ===",
+            &new_savings.purchase, &new_savings.total_saving, MAX_LEN_DOUBLE);
+            if (check == ERR_MEMORY)
+            {
+                HANDLE_MEMORY_ERRORS();
+            }
+
+            check = get_financial_input("=== SAVINGS EMERGENCIES ===",
+            &new_savings.emergencies, &new_savings.total_saving, MAX_LEN_DOUBLE);
+            if (check == ERR_MEMORY)
+            {
+                HANDLE_MEMORY_ERRORS();
+            }
+            break;
+        
+        case 'n':
+            break;
+    }
+    free(choose);
+
+    if (!valid)
+    {
+        return ERR_MEMORY;
+    }
+
+    printf("Have you invested any amount of money this month? ");
+    choose = ask_choose();
+    if (choose == NULL)
+    {
+        return ERR_MEMORY;
+    }
+
+    switch (choose[0])
+    {
+        case 'y':
+            printf("\nIf you have saved nothing in any of the following items you may enter \"0\" or just press \"enter\".\n");
+
+            check = get_financial_input("=== REAL ESTATE INVESTMENT ===",
+            &new_investment.real_estate, &new_investment.investment, MAX_LEN_DOUBLE);
+            if (check == ERR_MEMORY)
+            {
+                HANDLE_MEMORY_ERRORS();
+            }
+
+            check = get_financial_input("=== CURRENCIES INVESTMENT ===",
+            &new_investment.currencies, &new_investment.investment, MAX_LEN_DOUBLE);
+            if (check == ERR_MEMORY)
+            {
+                HANDLE_MEMORY_ERRORS();
+            }
+
+            check = get_financial_input("=== COMMODITIES INVESTMENT ===",
+            &new_investment.commodities, &new_investment.investment, MAX_LEN_DOUBLE);
+            if (check == ERR_MEMORY)
+            {
+                HANDLE_MEMORY_ERRORS();
+            }
+
+            check = get_financial_input("=== STOCKS ===",
+            &new_investment.stocks, &new_investment.investment, MAX_LEN_DOUBLE);
+            if (check == ERR_MEMORY)
+            {
+                HANDLE_MEMORY_ERRORS();
+            }
+            break;
+        
+        case 'n':
+            break;
+    }
+    free(choose);
+
+    if (!valid)
+    {
+        return ERR_MEMORY;
+    }
+
+    new_balance = calculate_final_balance(income, expense, debt, new_savings.total_saving, new_investment.investment);
+
+    //after get all the values, it prints all the information into the file
+
     check = write_personal_report(personal_report_file, "\n\nPersonal Finance Report\n", 0, &header_written);
     if (check == ERR_FILE)
     {
         return ERR_FILE;
     }
 
-    //after get all the values, it prints all the information into the file
     check = write_personal_report(personal_report_file, "- Total income", income, &header_written);
     if (check == ERR_FILE)
     {
@@ -469,6 +569,25 @@ int main(void)
     {
         return ERR_FILE;
     }
+
+    check = write_savings(personal_report_file, new_savings);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_investments(personal_report_file, new_investment);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(personal_report_file, "\nFinal balance", new_balance);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
     if (fclose(personal_report_file) == EOF)
     {
         close_file_error(personal_report_name);

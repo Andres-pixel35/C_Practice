@@ -13,5 +13,6 @@ int get_previous_year(int year);
 int check_choose(char *choose);
 char *ask_choose(void); 
 bool checK_item(char *buffer);
+double calculate_final_balance(double income, double expense, double debt, double saving, double investment);
 
 #endif

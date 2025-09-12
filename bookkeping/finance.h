@@ -19,5 +19,8 @@ double get_previous_values(const char *message, double *value, double *total_val
 double get_items(const char *message, Items arr[], Items top[], int *index, size_t MAX_ITEMS);
 double write_loop_items(FILE *file, Items arr[], int index, bool *header_written);
 void compare_items(Items top[], Items new[], int *index);
+double get_financial_input(const char *message, double *value, double *total, size_t size);
+double write_savings(FILE *file, Savings s);
+double write_investments(FILE *file, Investment iv);
 
 #endif

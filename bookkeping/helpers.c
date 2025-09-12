@@ -277,4 +277,8 @@ bool checK_item(char *buffer)
     return true;
 }
 
-
+double calculate_final_balance(double income, double expense, double debt, double saving, double investment)
+{
+    double final_balance = income - (expense + debt + saving + investment);
+    return final_balance;
+}
