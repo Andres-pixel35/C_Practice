@@ -43,6 +43,7 @@ typedef struct Items
 {
     char name[51];
     double value;
+    double percentage;
 }
 Items;
 #endif

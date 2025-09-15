@@ -51,18 +51,18 @@ int main(void)
     double income = 0;
     double expense = 0;
     double debt = 0;
-    char current_file_name[SIZE_FILE_NAME];
+    char key_drivers_name[SIZE_FILE_NAME];
     char personal_report_name[SIZE_PERSONAL_REPORT_FILE];
     PreviousInvestment previous_investment = {0};
     PreviousSavings previous_savings = {0};
     Investment new_investment = {0};
     Savings new_savings = {0};
-    Items incomes[MAX_ITEMS] = { "", 0 };
-    Items expenses[MAX_ITEMS] = { "", 0 };
-    Items debts[MAX_ITEMS] = { "", 0 };
-    Items top_incomes[TOP_SIZE] = { "", 0 };
-    Items top_expenses[TOP_SIZE] = { "", 0 };
-    Items top_debts[TOP_SIZE] = { "", 0 };
+    Items incomes[MAX_ITEMS] = { "", 0, 0 };
+    Items expenses[MAX_ITEMS] = { "", 0, 0 };
+    Items debts[MAX_ITEMS] = { "", 0, 0 };
+    Items top_incomes[TOP_SIZE] = { "", 0, 0 };
+    Items top_expenses[TOP_SIZE] = { "", 0, 0 };
+    Items top_debts[TOP_SIZE] = { "", 0, 0 };
 
     int result = has_files_wildcard("??_????.txt");
     if (result == ERR_DIC)
@@ -258,6 +258,7 @@ int main(void)
     else
     {
         bool valid = true; // to control memory errors
+        double sign; // to know the sign of the previous balance, if necessary
 
         printf("\n=== Welcome to the interface for new users ===\n\nDo you have any previous balance that you would like to add?\n"
                "Remeber that is money besides savings and investments and it's from the previous month ");
@@ -270,12 +271,26 @@ int main(void)
         switch (choose[0])
         {
         case 'y':
+
+            sign = ask_sign();
+            if (sign == ERR_MEMORY)
+            {
+                free(choose);
+                return ERR_MEMORY;
+            }
+
             previous_balance = get_values_double(MAX_LEN_DOUBLE);
             if (previous_balance == ERR_MEMORY)
             {
                 free(choose);
                 return ERR_MEMORY;
             }
+
+            if (sign == 1)
+            {
+                previous_balance = -previous_balance;
+            }
+
             break;
 
         case 'n':
@@ -546,6 +561,12 @@ int main(void)
         return ERR_FILE;
     }
 
+    check = write_items(personal_report_file, "Previous balance", previous_balance);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
     check = write_personal_report(personal_report_file, "\n- Total expenses", expense, &header_written);
     if (check == ERR_FILE)
     {
@@ -582,7 +603,7 @@ int main(void)
         return ERR_FILE;
     }
 
-    check = write_items(personal_report_file, "\nFinal balance", new_balance);
+    check = write_items(personal_report_file, "\n- Final balance", new_balance);
     if (check == ERR_FILE)
     {
         return ERR_FILE;
@@ -591,6 +612,25 @@ int main(void)
     if (fclose(personal_report_file) == EOF)
     {
         close_file_error(personal_report_name);
+        return ERR_FILE;
+    }
+
+    // from here forth everything is doing in order to write the keydrivers file.
+
+    build_file_name(key_drivers_name, SIZE_FILE_NAME, month, year);
+    FILE *key_drivers_file = fopen(key_drivers_name, "a");
+    if (!key_drivers_file)
+    {
+        file_not_open(key_drivers_name);
+        return ERR_FILE;
+    }
+
+    savings_sum(&new_savings, previous_savings);
+    investment_sum(&new_investment, previous_investment);
+
+    if (fclose(key_drivers_file) == EOF)
+    {
+        close_file_error(key_drivers_name);
         return ERR_FILE;
     }
     return 0;

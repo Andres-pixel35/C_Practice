@@ -156,7 +156,7 @@ double get_values_double(size_t size)
         size_t len = strlen(buffer);
         if (len > size)
         {
-            printf("You can only enter a maximun of %zu characters and you entered: %zu. Please try again\n"
+            printf("You can only enter a maximun of %zu digits and you entered: %zu. Please try again\n"
                     "(With this amount of money, I don't know why are you here. Thanks though.)\n", size, len);
 
             free(buffer);
