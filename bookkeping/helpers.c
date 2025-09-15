@@ -7,6 +7,7 @@
 
 #include "helpers.h"
 #include "errors.h"
+#include "struct.h"
 
 /**
  * Matches a string against a wildcard pattern
@@ -281,4 +282,65 @@ double calculate_final_balance(double income, double expense, double debt, doubl
 {
     double final_balance = income - (expense + debt + saving + investment);
     return final_balance;
+}
+
+double ask_sign(void)
+{
+    printf("Is it a positive amount? ");
+    char *choose = ask_choose();
+    if (choose == NULL)
+    {
+        memory_error();
+        return ERR_MEMORY;
+    }
+
+    switch (choose[0])
+    {
+        case 'y':
+            free(choose);
+            return 0;
+            
+
+        case 'n':
+            free(choose);
+            return 1;
+    }
+}
+
+void savings_sum(Savings *sv, PreviousSavings psv)
+{
+    sv->total_saving = sv->total_saving + psv.previous_total_saving;
+    sv->travels = sv->travels + psv.previous_travels;
+    sv->purchase = sv->purchase + psv.previous_purchase;
+    sv->emergencies = sv->emergencies + psv.previous_emergencies;
+}
+
+void investment_sum(Investment *iv, PreviousInvestment piv)
+{
+    iv->investment = iv->investment + piv.previous_total_investment;
+    iv->commodities = iv->commodities + piv.previous_commodities;
+    iv->currencies = iv->currencies + piv.previous_currencies;
+    iv->real_estate = iv->real_estate + piv.previous_real_estate;
+    iv->stocks = iv->stocks + piv.previous_stocks;
+}
+
+
+double calculate_percentage(double base_value, double part_value)
+{
+    if (base_value == 0 || part_value == 0)
+    {
+        return 0;
+    }
+
+    double percentage = (part_value / base_value) * 100;
+    
+    return percentage; 
+}
+
+void loop_items_calculate_percentage(Items it[], int index, double base_value)
+{
+    for (int i = 0; i < index; i++)
+    {
+        it[i].percentage = calculate_percentage(base_value, it[i].value);
+    }
 }

@@ -1,0 +1,31 @@
+(test file)Withdrawals from Savings
+
+- Savings: $6.00
+Travels: $2.00
+Planned purchases: $2.00
+Emergencies: $2.00
+
+Personal Finance Report
+
+- Total income: $880.00
+wage: $1000.00
+Previous balance: $-120.00
+
+- Total expenses: $200.00
+rent: $200.00
+
+- Debts: $100.00
+loan: $100.00
+
+- Savings: $0.00
+Travels: $0.00
+Planned purchases: $0.00
+Emergencies: $0.00
+
+- Investment: $0.00
+Real estate: $0.00
+Currencies: $0.00
+Commodities: $0.00
+Stocks: $0.00
+
+- Final balance: $580.00
