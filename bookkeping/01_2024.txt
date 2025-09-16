@@ -1,0 +1,30 @@
+(test file)Financial Overview & Key Drivers
+
+- Total income: $1190.00
+wage: $1000.00 (84.03%)
+commissions: $200.00 (16.81%)
+freelance: $100.00 (8.40%)
+
+- Total expenses: $340.00 (28.57%)
+rent: $0.00 (0.00%)
+food: $100.00 (29.41%)
+mobile: $30.00 (8.82%)
+
+- Debts: $300.00 (25.21%)
+credit card: $0.00 (0.00%)
+loan: $100.00 (33.33%)
+
+This month you saved $0.00 (0.00% out of your income this month) and the total of your savings is the following:
+- Savings: $120.00
+Travels: $50.00
+Planned purchases: $20.00
+Emergencies: $50.00
+
+This month you invested $0.00 (0.00% out of your income this month) and the total of your investment is the following:
+- Investment: $150.00
+Real estate: $50.00
+Currencies: $50.00
+Commodities: $0.00
+Stocks: $50.00
+
+- Final balance: $550.00

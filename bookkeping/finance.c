@@ -325,28 +325,20 @@ double sum_values_items(Items arr[], int index)
 // if bigger, it updates the value inside the top 3 and the name as well as the rest of the top if need it.
 void compare_items(Items top[], Items new[], int *index)
 {
-    int real_index = *index - 1; // since index was add 1 in update item, the index of the item new I want to compare is that index minus 1
+    int real_index = *index - 1; 
+    Items temp = new[real_index]; // new item
 
     for (int i = 0; i < 3; i++)
     {
-        if (top[i].value < new[real_index].value)
+        if (top[i].value < temp.value)
         {
-            if (i == 0)
+            // move downwards
+            for (int j = 2; j > i; j--)
             {
-                strcpy(top[2].name, top[1].name);
-                top[2].value = top[1].value;
-
-                strcpy(top[1].name, top[0].name);
-                top[1].value = top[0].value;
-            }
-            else if (i == 1)
-            {
-                strcpy(top[2].name, top[1].name);
-                top[2].value = top[1].value;
+                top[j] = top[j - 1];
             }
 
-            strcpy(top[i].name, new[real_index].name);
-            top[i].value = new[real_index].value;
+            top[i] = temp;
             break;
         }
     }
@@ -384,7 +376,7 @@ double get_items(const char *message, Items arr[], Items top[], int *index, size
         }
 
         double value = get_values_double(15);
-        if (value < 1)
+        if (value <= 0)
         {
             free(item);
             printf("You must write a value greater than 0 per each item.\n");
@@ -477,7 +469,7 @@ double write_investments(FILE *file, Investment iv)
         return ERR_FILE;
     }
 
-    check = write_items(file, "Currencies", iv.currencies);
+    check = write_items(file, "Currencies (forex)", iv.currencies);
     if (check == ERR_FILE)
     {
         return ERR_FILE;
@@ -496,4 +488,109 @@ double write_investments(FILE *file, Investment iv)
     }
 
     return 0;
+}
+
+double write_keydrivers_items(FILE *file, const char *item, double value, double percentage)
+{
+    if (fprintf(file, "\n%s: $%.2f (%.2f%%)", item, value, percentage) < 0)
+    {
+        return ERR_FILE;
+    }
+    return 0;
+}
+
+double loop_write_keydrivers_items(FILE *file, Items it[], int index)
+{
+    double check = 0;
+    if (index > 3)
+    {
+        index = 3;
+    }
+
+    for (int i = 0; i < index; i++)
+    {
+        check = write_keydrivers_items(file, it[i].name, it[i].value, it[i].percentage);
+        if (check == ERR_FILE)
+        {
+            return ERR_FILE;
+        }
+    }
+
+    return 0;
+}
+
+double write_saving_keydrivers(FILE *file, Savings sv, double total_saving, double percentage)
+{
+    double check = 0;
+
+    if (fprintf(file, "\n\nThis month you saved $%.2f (%.2f%% out of your income this month) and the total of your savings is the following:",
+         sv.total_saving, percentage) < 0)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "- Savings", total_saving);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "Travels", sv.travels);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "Planned purchases", sv.purchase);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "Emergencies", sv.emergencies);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+}
+
+double write_investments_keydrivers(FILE *file, Investment iv, double total_investment, double percentage)
+{
+    double check = 0;
+
+    if (fprintf(file, "\n\nThis month you invested $%.2f (%.2f%% out of your income this month) and the total of your investment is the following:",
+         iv.investment, percentage) < 0)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "- Investment", total_investment);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "Real estate", iv.real_estate);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "Currencies", iv.currencies);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "Commodities", iv.commodities);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(file, "Stocks", iv.stocks);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
 }

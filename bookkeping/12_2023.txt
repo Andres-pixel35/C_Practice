@@ -2,31 +2,31 @@
 
 Financial Overview & Key Drivers
 
-- Total income: $1,200.00
+- Total income: $1200.00
 Wage: $900.00 (75.00%)
 Commissions: $150.00 (12.50%)
 Freelance: $100.00 (8.33%)
 
-- Total expenses: $850.00 (70.83% of income)
+- Total expenses: $850.00 (70.83%)
 Rent: $450.00 (52.94%)
 Food: $150.00 (17.65%)
 Transportation: $100.00 (11.76%)
 
-- Debts: $200.00 (16.67% of income)
+- Debts: $200.00 (16.67%)
 Credit card: $100.00 (50.00%)
 Loan payment: $100.00 (50.00%)
 
 This month you saved $120.00 (10.00% out of your income this month) and the total of your savings is the following:
 - Savings: $120.00
-Travels: $50.00 (41.67%)
-Planned purchases: $20.00 (16.67%)
-Emergencies: $50.00 (41.67%)
+Travels: $50.00
+Planned purchases: $20.00 
+Emergencies: $50.00 
 
 This month you invested $150.00 (12.50% out of your income this month) and the total of your investment is the following:
 - Investment: $150.00
-Real estate: $50.00 (33.33%)
-Currencies (forex): $50.00 (33.33%)
-Commodities: $0.00 (0%)
-Stocks: $50.00 (33.33%)
+Real estate: $50.00 
+Currencies (forex): $50.00 
+Commodities: $0.00 
+Stocks: $50.00 
 
 - Final balance: $-120.00
