@@ -60,9 +60,9 @@ int main(void)
     Items incomes[MAX_ITEMS] = { "", 0, 0 };
     Items expenses[MAX_ITEMS] = { "", 0, 0 };
     Items debts[MAX_ITEMS] = { "", 0, 0 };
-    Items top_incomes[TOP_SIZE] = { "", 0, 0 };
-    Items top_expenses[TOP_SIZE] = { "", 0, 0 };
-    Items top_debts[TOP_SIZE] = { "", 0, 0 };
+    Items top_incomes[TOP_SIZE] = { { "", 0, 0 } };
+    Items top_expenses[TOP_SIZE] = { { "", 0, 0 } };
+    Items top_debts[TOP_SIZE] = { { "", 0, 0 } };
 
     int result = has_files_wildcard("??_????.txt");
     if (result == ERR_DIC)
@@ -625,8 +625,88 @@ int main(void)
         return ERR_FILE;
     }
 
+    // calculate de percentage that each total represents of the income
+    double new_savings_percentage = calculate_percentage(income, new_savings.total_saving);
+    double new_investments_percentage = calculate_percentage(income, new_investment.investment);
+    double expense_percentage = calculate_percentage(income, expense);
+    double debt_percentage = calculate_percentage(income, debt);
+
+    //update the value of saving addind to the new savings the previous one.
     savings_sum(&new_savings, previous_savings);
     investment_sum(&new_investment, previous_investment);
+    double total_saving = new_savings.total_saving + previous_savings.previous_total_saving;
+    double total_investment = new_investment.investment + previous_investment.previous_total_investment;
+
+    // percentage of the money saved and investment this month
+    double saving_percentage = calculate_percentage(income, new_savings.total_saving);
+    double investment_percentage = calculate_percentage(income, new_investment.investment);
+
+    // get the percentages for each top 3
+    loop_items_calculate_percentage(top_incomes, index_incomes, income);
+    loop_items_calculate_percentage(top_expenses, index_expenses, expense);
+    loop_items_calculate_percentage(top_debts, index_debts, debt);
+
+    // write all the information inside keydrivers
+
+    check = write_headers(key_drivers_file, "Financial Overview & Key Drivers");
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(key_drivers_file, "\n- Total income", income);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = loop_write_keydrivers_items(key_drivers_file, top_incomes, index_incomes);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_keydrivers_items(key_drivers_file, "\n- Total expenses", expense, expense_percentage);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = loop_write_keydrivers_items(key_drivers_file, top_expenses, index_expenses);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_keydrivers_items(key_drivers_file, "\n- Debts", debt, debt_percentage);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = loop_write_keydrivers_items(key_drivers_file, top_debts, index_debts);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_saving_keydrivers(key_drivers_file, new_savings, total_saving, saving_percentage);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_investments_keydrivers(key_drivers_file, new_investment, total_investment, investment_percentage);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
+
+    check = write_items(key_drivers_file, "\n- Final balance", new_balance);
+    if (check == ERR_FILE)
+    {
+        return ERR_FILE;
+    }
 
     if (fclose(key_drivers_file) == EOF)
     {

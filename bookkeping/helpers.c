@@ -309,7 +309,6 @@ double ask_sign(void)
 
 void savings_sum(Savings *sv, PreviousSavings psv)
 {
-    sv->total_saving = sv->total_saving + psv.previous_total_saving;
     sv->travels = sv->travels + psv.previous_travels;
     sv->purchase = sv->purchase + psv.previous_purchase;
     sv->emergencies = sv->emergencies + psv.previous_emergencies;
@@ -317,7 +316,6 @@ void savings_sum(Savings *sv, PreviousSavings psv)
 
 void investment_sum(Investment *iv, PreviousInvestment piv)
 {
-    iv->investment = iv->investment + piv.previous_total_investment;
     iv->commodities = iv->commodities + piv.previous_commodities;
     iv->currencies = iv->currencies + piv.previous_currencies;
     iv->real_estate = iv->real_estate + piv.previous_real_estate;
@@ -344,3 +342,4 @@ void loop_items_calculate_percentage(Items it[], int index, double base_value)
         it[i].percentage = calculate_percentage(base_value, it[i].value);
     }
 }
+

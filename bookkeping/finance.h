@@ -22,5 +22,9 @@ void compare_items(Items top[], Items new[], int *index);
 double get_financial_input(const char *message, double *value, double *total, size_t size);
 double write_savings(FILE *file, Savings s);
 double write_investments(FILE *file, Investment iv);
+double write_investments_keydrivers(FILE *file, Investment iv, double total_investment, double percentage);
+double write_saving_keydrivers(FILE *file, Savings sv, double total_saving, double percentage);
+double loop_write_keydrivers_items(FILE *file, Items it[], int index);
+double write_keydrivers_items(FILE *file, const char *item, double value, double percentage);
 
 #endif
