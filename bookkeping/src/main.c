@@ -2,17 +2,17 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "helpers.h"
-#include "struct.h"
-#include "errors.h"
-#include "finance.h"
+#include "../include/helpers.h"
+#include "../include/struct.h"
+#include "../include/errors.h"
+#include "../include/finance.h"
 
 #define FILE_FOUND 2
 #define FILE_NOT_FOUND 1
 #define MAX_LEN_MONTH 2   // this is to check the length of the input, if it has more than 2 characters it's obviously not a month
 #define MAX_LEN_YEAR 4    // here it's the same, and it also works to avoid overflow the atoi in helpers.c
-#define SIZE_FILE_NAME 12 // so, 12 characters due to the restrictions for the name 'MM_YYYY.txt' + '\0' = 12
-#define SIZE_PERSONAL_REPORT_FILE 28 // so, 'MM_YYYY_Personal_Report.txt' = 27 + '\0' = 28
+#define SIZE_FILE_NAME 512 // since it also includes the path, I decided to store enough space just in case
+#define SIZE_PERSONAL_REPORT_FILE 512 // the same
 #define FIRST_MONTH 1     // i need to check if the current month is 12, if so then I have to set it to 12 and reduce the year by 1
 #define MAX_LEN_DOUBLE 15 // if you realy have this amount of money, I don't know what are you doing here
 #define MAX_ITEMS 100 // the max number of items the user would be able to enter
@@ -713,5 +713,7 @@ int main(void)
         close_file_error(key_drivers_name);
         return ERR_FILE;
     }
+
+    printf("\nBoth \"%s\" and \"%s\" have been created successfully.\n", personal_report_name, key_drivers_name);
     return 0;
 }

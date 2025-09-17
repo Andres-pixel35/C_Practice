@@ -5,9 +5,11 @@
 #include <dirent.h>
 #include <stdbool.h>
 
-#include "helpers.h"
-#include "errors.h"
-#include "struct.h"
+#include "../include/helpers.h"
+#include "../include/errors.h"
+#include "../include/struct.h"
+
+const char *BASE_PATH = "./reports/";
 
 /**
  * Matches a string against a wildcard pattern
@@ -56,7 +58,7 @@ int has_files_wildcard(const char *pattern)
     int found = 1;  // int: 1 = not found, 2 = found, ERR_DIC = error
     
     // Open the current directory
-    d = opendir(".");
+    d = opendir(BASE_PATH);
     if (!d)
     {
         return ERR_DIC;  
@@ -325,7 +327,7 @@ void investment_sum(Investment *iv, PreviousInvestment piv)
 
 double calculate_percentage(double base_value, double part_value)
 {
-    if (base_value == 0 || part_value == 0)
+    if (base_value == 0)
     {
         return 0;
     }
@@ -337,6 +339,11 @@ double calculate_percentage(double base_value, double part_value)
 
 void loop_items_calculate_percentage(Items it[], int index, double base_value)
 {
+    if (index > 3)
+    {
+        index = 3;
+    }
+
     for (int i = 0; i < index; i++)
     {
         it[i].percentage = calculate_percentage(base_value, it[i].value);

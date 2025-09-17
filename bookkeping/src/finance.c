@@ -4,10 +4,10 @@
 #include <strings.h>
 #include <stdlib.h>
 
-#include "finance.h"
-#include "errors.h"
-#include "struct.h"
-#include "helpers.h"
+#include "../include/finance.h"
+#include "../include/errors.h"
+#include "../include/struct.h"
+#include "../include/helpers.h"
 
 int get_previous_savings(FILE *file, PreviousSavings *savings, double *previous_balance) 
 {
@@ -198,13 +198,13 @@ double get_values_double(size_t size)
 
 void build_file_name(char *file_name, size_t size ,int month, int year)
 {
-    snprintf(file_name, size, "%02d_%04d.txt", month, year);
+    snprintf(file_name, size, "%s%02d_%04d.txt", BASE_PATH, month, year);
 }
 
 
 void build_personal_report(char *file_name, size_t size, int month, int year)
 {
-    snprintf(file_name, size, "%02d_%04d_Personal_Report.txt", month, year);
+    snprintf(file_name, size, "%s%02d_%04d_Personal_Report.txt", BASE_PATH, month, year);
 }
 
 // in a loop prints the message, calls get_values_double and check out that the value-spend entered is less or equal than the given value.

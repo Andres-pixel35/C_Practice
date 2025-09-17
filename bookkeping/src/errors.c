@@ -1,10 +1,11 @@
 #include <stdio.h> 
 
-#include "errors.h"
+#include "../include/errors.h"
+#include "../include/helpers.h"
 
 void dic_not_open(void)
 {
-    fprintf(stderr, "ERROR: Could not open current directory.\n");
+    fprintf(stderr, "ERROR: Could not open \"%s\" directory.\n", BASE_PATH);
 }
 
 void err_year(void)
