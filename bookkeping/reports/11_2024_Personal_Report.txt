@@ -2,11 +2,12 @@
 
 Personal Finance Report
 
-- Total income: $1011.00
-wage: $1000.00
-Previous balance: $11.00
+- Total income: $970.00
+commissions: $100.00
+Previous balance: $870.00
 
-- Total expenses: $0.00
+- Total expenses: $100.00
+rent: $100.00
 
 - Debts: $0.00
 
@@ -17,8 +18,8 @@ Emergencies: $0.00
 
 - Investment: $0.00
 Real estate: $0.00
-Currencies: $0.00
+Currencies (forex): $0.00
 Commodities: $0.00
 Stocks: $0.00
 
-- Final balance: $1011.00
+- Final balance: $870.00

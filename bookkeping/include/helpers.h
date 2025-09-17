@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include "struct.h"
 
+extern const char *BASE_PATH;
+
 bool match_wildcard(const char *pattern, const char *str);
 int has_files_wildcard(const char *pattern);
 char *read_input(void);
