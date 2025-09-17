@@ -1,4 +1,4 @@
-#C
+# C
 
 Once finished the CS50 course I fell in love with C, I didn't want to give up on C so I decided to keep practicing and improve my skills in C.
 
